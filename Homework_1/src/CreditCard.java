@@ -1,3 +1,5 @@
+import java.nio.channels.IllegalChannelGroupException;
+import java.util.*;
 public class CreditCard {
     private String creditCardNumber;
     private String cardHolderName;
@@ -25,5 +27,37 @@ public class CreditCard {
                 + ", cardHolderName=" + cardHolderName + ", bank=" + bank
                 + ", limit=" + limit + ", balance=" + balance + "]";
     }
+
+    //chargeIt takes in a price as the parameter
+    //Returns -1 if the transaction fails
+    //Returns balance if the transaction went through
+    public double chargeIt(double price) throws IllegalArgumentException{
+        if(price < 0){
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
+        if(balance + price > limit){
+            return -1;
+        }
+        balance += price;
+        return balance;
+    }
+
+    public double payment(double amount, Date day) throws IllegalArgumentException{
+        if(amount > balance){
+            throw new IllegalArgumentException("Amount exceeds Balance");
+        }
+        boolean hasFee = false;
+        if(day.getDay() > 15){
+            hasFee = true;
+        }
+        if(hasFee){
+            double fee = 0.05 * balance;
+            balance += fee;
+            balance -= amount;
+        }
+        balance -= amount;
+        return balance;
+    }
+
 
 }
