@@ -1,7 +1,13 @@
 import java.util.*;
 public class ComplexityAnalysis {
     public static void main(String[] args){
-
+        /*
+        The pairProgram method finds all valid pairs and prints the pairs one by one. It also returns a boolean value.
+        The tripletProgram method finds all valid triplets and prints them one by one. It also returns a boolean value.
+        
+        Modify the arr and key variables in the main method to test them
+        */
+        
         int[] arr = {11, 15, 6, 8, 9, 10};
         int key = 39;
 
@@ -31,7 +37,8 @@ public class ComplexityAnalysis {
             return true;
         }return false;
     }
-
+    
+    //Helper method to find valid pairs
     private static ArrayList<Value> sumPairs(int[] arr, int key){
         ArrayList<Value> pairs = new ArrayList<Value>();
 
@@ -46,7 +53,8 @@ public class ComplexityAnalysis {
 
         return pairs;
     }
-
+    
+    //Helper method to find valid triplets
     private static ArrayList<Value> sumTriplet(int[] arr, int key){
         ArrayList<Value> triplets = new ArrayList<Value>();
 
