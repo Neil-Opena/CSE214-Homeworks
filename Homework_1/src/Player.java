@@ -18,21 +18,19 @@ public class Player {
     }
 
     public void sortCards(){
-        //selection sort
-        for(int i = 0; i < cards.length; i++){
-            int max = cards[i].getCArdValue();
-            int maxIndex =  i;
-            for(int j = i + 1; j < cards.length; j++){
-                if(cards[j].getCArdValue() > max){
-                   max = cards[j].getCArdValue();
-                   maxIndex = j;
-                }
+        //insertion sort
+        for(int i = 1; i < cards.length; i++){
+            Card tempCard = cards[i];
+            int j = i;
+            while((j - 1 >= 0) && (cards[j - 1].getCArdValue() < tempCard.getCArdValue())){
+                //shift
+                cards[j] = cards[j - 1];
+                cards[j - 1] = tempCard;
+                j--;
             }
-            Card temp = cards[i];
-            cards[i] = cards[maxIndex];
-            cards[maxIndex] = temp;
         }
     }
+
 }
 
 
