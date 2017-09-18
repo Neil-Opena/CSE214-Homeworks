@@ -1,7 +1,9 @@
 import java.util.*;
 public class ComplexityAnalysis {
 
-    public static boolean sumPairs(int[] arr, int key) {
+    public static boolean sumPairs(int[] arr, int key) throws IllegalArgumentException{
+        if(arr.length < 1)
+            throw new IllegalArgumentException("Array size invalid");
         ArrayList<Value> pairs = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             for (int j = i + 1; j < arr.length; j++) {
@@ -20,7 +22,9 @@ public class ComplexityAnalysis {
         return false;
     }
 
-    public static boolean sumTriplets(int[] arr, int key) {
+    public static boolean sumTriplets(int[] arr, int key) throws IllegalArgumentException{
+        if(arr.length < 1)
+            throw new IllegalArgumentException("Array size is invalid");
         ArrayList<Value> triplets = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             for (int j = i + 1; j < arr.length; j++) {

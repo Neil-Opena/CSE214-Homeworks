@@ -9,7 +9,6 @@ public class Test {
         int[] arr = {11, 15, 6, 8, 9, 10};
         int key = 25;
 
-
         System.out.println("Pairs: " + ComplexityAnalysis.sumPairs(arr, key));
         System.out.println("Triplets: " + ComplexityAnalysis.sumTriplets(arr, key));
 
