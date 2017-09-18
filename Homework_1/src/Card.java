@@ -9,7 +9,7 @@ public class Card {
         this.card = card;
         char suite = card.charAt(0);
         String val = card.substring(1);
-
+        suite = Character.toUpperCase(suite);
         switch(suite){
             case('S') : cardValue += 400;
                         break;

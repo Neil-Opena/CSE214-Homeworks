@@ -36,24 +36,28 @@ public class CreditCard {
             throw new IllegalArgumentException("Price cannot be negative");
         }
         if(balance + price > limit){
+            System.out.println("Transaction failed");
             return -1;
         }
         balance += price;
+        System.out.println("Transaction successful");
         return balance;
     }
 
-    public double payment(double amount, Date day) throws IllegalArgumentException{
+    public double payment(double amount, int day) throws IllegalArgumentException{
         if(amount > balance){
             throw new IllegalArgumentException("Amount exceeds Balance");
+        }else if(day > 31 || day < 1){
+            throw new IllegalArgumentException("day does not exist");
         }
         boolean hasFee = false;
-        if(day.getDay() > 15){
+        if(day > 15){
             hasFee = true;
+            System.out.println("Fee added");
         }
         if(hasFee){
             double fee = 0.05 * balance;
             balance += fee;
-            balance -= amount;
         }
         balance -= amount;
         return balance;

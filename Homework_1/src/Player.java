@@ -12,9 +12,10 @@ public class Player {
     }
 
     public void printCards(){
-        for(int i = 0; i < cards.length; i++){
+        for(int i = 0; i < cards.length; i++) {
             System.out.print(cards[i] + " ");
         }
+        System.out.println();
     }
 
     public void sortCards(){
