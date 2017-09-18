@@ -44,7 +44,7 @@ getCalculatedDistance()
 getArrivalTime()
 	-Parameter: none
 	-Precondition: currentLocation and destinationLocation is set
-	-Postcondition: returns the arrival time (used v = s/t formula)
+	-Postcondition: returns the arrival time (used v = s/t formula) in seconds
 	-Throws: NullPointerException - locations weren't set
 
 
