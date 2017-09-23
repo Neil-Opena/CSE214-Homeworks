@@ -9,7 +9,11 @@ public class test{
 		} 
 
 		System.out.println((int)Math.random()* 20);
-	
+	    int myVar = 21;
+        for(int i = 0; i < 5; i++){
+            System.out.println("myVar" + myVar + 1);
+            System.out.println("This is pretty cool");
+        }
 	}
 
 }
