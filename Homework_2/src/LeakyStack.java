@@ -3,7 +3,8 @@ import java.io.*;
 public class LeakyStack {
     public static void main(String[] args){
         //read input from file
-
+        //FIXMe exception if file is not formatted correctly
+        //FIXMe remove print statements in the end
         //FIXMe make sure to put src code in src folder and zip that folder up with text files
         try{
             File file = new File("in3.txt");
@@ -18,7 +19,7 @@ public class LeakyStack {
                 case1.printOperations();
             }
         }catch(Exception e){
-            System.out.println("File does not exist. Please place a file name \"in3.txt\" in the " +
+            System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
                     "same directory as the src directory, and try again.");
         }
     }
