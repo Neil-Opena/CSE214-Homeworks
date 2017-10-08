@@ -1,19 +1,17 @@
 public class LinkedList<T> {
     private Node head;
+    private Node tail;
 
     private class Node<T>{
         private T data;
-        private Node next;
-        private Node previous;
+        private Node<T> next;
 
         public Node(){
 
         }
 
-        public Node(T data, Node next, Node previous){
+        public Node(T data){
             this.data = data;
-            this.next = next;
-            this.previous = previous;
         }
     }
 
@@ -21,12 +19,29 @@ public class LinkedList<T> {
 
     }
 
-    public LinkedList(T data){
-        this.head = new Node<T>(data, null, null);
-    }
 
     public Node getHead(){
         return this.head;
+    }
+
+    public Node getTail(){
+        return this.tail;
+    }
+
+    public int getSize(){
+        Node<T> current = head;
+        int size = 0;
+        while(current != null){
+           size++;
+           current = current.next;
+        }
+        return size;
+    }
+
+    public boolean clear(){
+        head = null;
+        tail = null;
+        return true;
     }
 
     public void printList(){
@@ -39,9 +54,39 @@ public class LinkedList<T> {
     }
 
     public void addToStart(T data){
-        Node temp = new Node<T>(data, null, null);
-        temp.next = head;
-        head = temp;
+        if(isEmpty()){
+            //also create tail
+            head = new Node<T>(data);
+            tail = head;
+        }else {
+            Node temp = new Node<T>(data);
+            temp.next = head;
+            head = temp;
+        }
+    }
+
+    public boolean deleteHead(){
+        Node<T> current = head;
+        if(current == null){
+            return false;
+        }
+        head = head.next;
+        return true;
+    }
+
+    public boolean isEmpty(){
+        return head == null;
+    }
+
+    public void addToEnd(T data){
+        if(isEmpty()){
+            //also create head
+            head = new Node<T>(data);
+            tail = head;
+        }else{
+            tail.next = new Node<T>(data);
+            tail = tail.next;
+        }
     }
 
 }

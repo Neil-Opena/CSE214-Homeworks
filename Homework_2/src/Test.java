@@ -4,6 +4,7 @@ public class Test {
         list.addToStart("Apples");
         list.addToStart("Bananas");
         list.addToStart("Oranges");
+        list.addToEnd("Mangoes");
         list.printList();
     }
 }
