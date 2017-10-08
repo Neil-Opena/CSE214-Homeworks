@@ -13,6 +13,10 @@ public class LinkedList<T> {
         public Node(T data){
             this.data = data;
         }
+
+        public String toString(){
+            return data + "";
+        }
     }
 
     public LinkedList(){
@@ -38,6 +42,8 @@ public class LinkedList<T> {
         return size;
     }
 
+
+
     public boolean clear(){
         head = null;
         tail = null;
@@ -48,9 +54,10 @@ public class LinkedList<T> {
         Node current = head;
         int count = 0;
         while(current!=null){
-            System.out.print(++count + "=" + current.data + " ");
+            System.out.print(++count + "=" + current + " ");
             current = current.next;
         }
+        System.out.println();
     }
 
     public void addToStart(T data){
