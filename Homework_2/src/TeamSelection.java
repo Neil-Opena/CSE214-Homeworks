@@ -26,7 +26,7 @@ public class TeamSelection {
             System.out.println("Some error occurred...");
         }catch(Exception e){
             System.out.println("File is not formatted correctly. Please format it such that the first line " +
-            "contains number of test cases. Second line contains the jersey number of the players. Third line " +
+            "contains number of test cases. Next line contains the jersey number of the players. Next line " +
             "contains heights of the players in centimeters.");
         }
 

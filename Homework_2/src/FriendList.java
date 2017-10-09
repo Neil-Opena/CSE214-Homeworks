@@ -15,9 +15,17 @@ public class FriendList {
               case1.printNames();
               case1.printMutualFriends();
           }
-      }catch(Exception e){
-          System.out.println("File does not exist. Please place a file named \"in1.txt\" in the " +
+      }catch(FileNotFoundException e){
+          System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
                   "same directory as the src directory, and try again.");
+      }catch(NullPointerException e){
+          e.printStackTrace();
+          System.out.println("Some error occurred...");
+      }catch(Exception e){
+          System.out.println("File is not formatted correctly. Please format it such that the first line " +
+                  "contains the number of test cases. Next line consists of two space separated integers N and K. " +
+                  "Next line consists of N strings. Next line " +
+                  "consists of integers representing the number of mutual friends.");
       }
    }
 

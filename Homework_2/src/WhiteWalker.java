@@ -16,9 +16,16 @@ public class WhiteWalker {
                 System.out.println(case1.getN() + " " + case1.getM());
                 case1.printPowers();
             }
-        }catch(Exception e){
-            System.out.println("File does not exist. Please place a file named \"in4.txt\" in the " + 
+        }catch(FileNotFoundException e){
+            System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
                     "same directory as the src directory, and try again.");
+        }catch(NullPointerException e){
+            e.printStackTrace();
+            System.out.println("Some error occurred...");
+        }catch(Exception e){
+            System.out.println("File is not formatted correctly. Please format it such that the first line " +
+                    "contains number of test cases. Next line consists of integers N and M. Next line " +
+                    "contains a list of the powers of the white walkers");
         }
 
     }

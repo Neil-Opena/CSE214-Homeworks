@@ -1,9 +1,8 @@
 import java.util.*;
 import java.io.*;
-public class LeakyStack {
+public class LeakyStackProgram {
     public static void main(String[] args){
         //read input from file
-        //FIXMe exception if file is not formatted correctly
         //FIXMe remove print statements in the end
         //FIXMe make sure to put src code in src folder and zip that folder up with text files
         try{
@@ -18,9 +17,16 @@ public class LeakyStack {
                 System.out.println(case1.getCapacity());
                 case1.printOperations();
             }
-        }catch(Exception e){
+        }catch(FileNotFoundException e){
             System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
                     "same directory as the src directory, and try again.");
+        }catch(NullPointerException e){
+            e.printStackTrace();
+            System.out.println("Some error occurred...");
+        }catch(Exception e){
+            System.out.println("File is not formatted correctly. Please format it such that the first line " +
+                    "contains number of test cases. Next line contains the capacity of the LeakyStack. Next line " +
+                    "contains the consecutive operations in the browser");
         }
     }
 }
