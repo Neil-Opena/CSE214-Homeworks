@@ -10,13 +10,13 @@ public class LeakyStackProgram {
             Scanner input = new Scanner(file);
 
             int numTests = Integer.parseInt(input.nextLine());
-            System.out.println(numTests);
+            //System.out.println(numTests);
 
             for(int i = 0; i < numTests; i++){
-                LeakyStackTestCase case1 = new LeakyStackTestCase(input.nextLine(), input.nextLine());
-                System.out.println(case1.getCapacity());
-                case1.printOperations();
-                case1.emptyStack();
+                LeakyStackTestCase test = new LeakyStackTestCase(input.nextLine(), input.nextLine());
+                //System.out.println(test.getCapacity());
+                //test.printOperations();
+                test.emptyStack();
                 System.out.println("--------------------------------------");
             }
         }catch(FileNotFoundException e){
@@ -98,8 +98,12 @@ class LeakyStackTestCase{
         this.operations = operationsString.split(" ");
         this.capacity = Integer.parseInt(capacityString);
         myStack = new LeakyStack(this.capacity);
-        for(String operation : operations){
-            myStack.push(operation);
+        if(this.capacity == 0){
+            System.out.println("Cannot have an empty stack");
+        }else{
+            for(String operation : operations){
+                myStack.push(operation);
+            }
         }
     }
 
@@ -115,7 +119,7 @@ class LeakyStackTestCase{
     }
 
     public void emptyStack(){
-        System.out.println("Emptying stack...");
+        //System.out.println("Emptying stack...");
         while(!myStack.isEmpty()){
             System.out.print(myStack.pop() + " ");
         }
