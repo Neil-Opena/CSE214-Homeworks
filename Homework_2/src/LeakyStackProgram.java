@@ -16,6 +16,8 @@ public class LeakyStackProgram {
                 LeakyStackTestCase case1 = new LeakyStackTestCase(input.nextLine(), input.nextLine());
                 System.out.println(case1.getCapacity());
                 case1.printOperations();
+                case1.emptyStack();
+                System.out.println("--------------------------------------");
             }
         }catch(FileNotFoundException e){
             System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
@@ -31,26 +33,91 @@ public class LeakyStackProgram {
     }
 }
 
+class LeakyStack{
+    private int capacity;
+    private Node top;
+
+    private class Node{
+        String operation;
+        Node next;
+
+        private Node(String operation){
+            this.operation = operation;
+        }
+    }
+
+    public LeakyStack(int capacity){
+        this.capacity = capacity;
+    }
+
+    public void push(String operation){
+        Node temp = new Node(operation);
+        temp.next = top;
+        top = temp;
+        if(getSize() > capacity){
+            deleteBottom();
+        }
+    }
+
+    private void deleteBottom(){
+        Node current = top;
+        for(int i = 0; i < capacity - 1; i++){
+            current = current.next;
+        }
+        current.next = null;
+    }
+
+    public String pop(){
+        String tempData = top.operation;
+        top = top.next;
+        return tempData;
+    }
+
+    public int getSize(){
+        Node current = top;
+        int count = 0;
+        while(current!=null){
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+
+    public boolean isEmpty(){
+        return top == null;
+    }
+
+}
+
 class LeakyStackTestCase{
+    LeakyStack myStack;
     private int capacity;
     private String[] operations;
 
     public LeakyStackTestCase(String capacityString, String operationsString){
-        capacity = Integer.parseInt(capacityString);
-        operations = operationsString.split(" ");
+        this.operations = operationsString.split(" ");
+        this.capacity = Integer.parseInt(capacityString);
+        myStack = new LeakyStack(this.capacity);
+        for(String operation : operations){
+            myStack.push(operation);
+        }
     }
 
     public int getCapacity(){
         return this.capacity;
     }
 
-    public String[] getOperations(){
-        return this.operations;
+    public void printOperations(){
+        for(String operation : operations){
+            System.out.print(operation + " ");
+        }
+        System.out.println();
     }
 
-    public void printOperations(){
-        for(String ops : operations){
-            System.out.print(ops + " ");
+    public void emptyStack(){
+        System.out.println("Emptying stack...");
+        while(!myStack.isEmpty()){
+            System.out.print(myStack.pop() + " ");
         }
         System.out.println();
     }
