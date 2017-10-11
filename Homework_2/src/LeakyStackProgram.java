@@ -3,7 +3,6 @@ import java.io.*;
 public class LeakyStackProgram {
     public static void main(String[] args){
         //read input from file
-        //FIXMe remove print statements in the end
         //FIXMe make sure to put src code in src folder and zip that folder up with text files
         try{
             File file = new File("in3.txt");
