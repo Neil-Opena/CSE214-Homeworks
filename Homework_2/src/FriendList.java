@@ -10,15 +10,22 @@ public class FriendList {
 
             for(int i = 0; i < numTests; i++){
                 FriendListTestCase case1 = new FriendListTestCase(input.nextLine(),input.nextLine(),input.nextLine());
-                Bucket[] buckets = case1.getBuckets();
-                //print contents of buckets - delete later
-                for(int j = 0; j < buckets.length; j++){
-                    System.out.print("Bucket " + j + ": ");
-                    buckets[j].printFriends();
-                    System.out.println("Size = " + buckets[j].getSize() + " min = " + buckets[j].getMinMF() + " max = " + buckets[j].getMaxMF());
+                try{
+                    /*
+                    Bucket[] buckets = case1.getBuckets();
+
+                    for(int j = 0; j < buckets.length; j++){
+                        System.out.print("Bucket " + j + ": ");
+                        buckets[j].printFriends();
+                        System.out.println("Size = " + buckets[j].getSize() + " min = " + buckets[j].getMinMF() + " max = " + buckets[j].getMaxMF());
+                    }
+                    */
+                    case1.printBucketizedList();
+
+                }catch(NullPointerException e){
+
                 }
                 System.out.println("-------------------------------------------");
-                case1.printBucketizedList();
             }
         }catch(FileNotFoundException e){
             System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
@@ -49,6 +56,23 @@ class FriendListTestCase{
         K = Integer.parseInt(friendsInts[1]);
         String[] names = namesString.split(" ");
         String[] mutualFriends = mutualFriendsString.split(" ");
+
+
+        if(K < 0){
+            System.out.println("Invalid number for K. Cannot have a value less than 0");
+            return;
+        }else if (N < 0){
+            System.out.println("Invalid number for N. Cannot have a value less than 0");
+            return;
+        }else if(N != names.length || names.length != mutualFriends.length){
+            System.out.println("Number of names or number of mutual friends do not match N");
+            return;
+        }else if(K == 0){
+            System.out.println("Selected 0 friends from N");
+            return;
+        }else if(N == 0){
+            return;
+        }
 
         friendsList = new Friend[N];
         initial = new Bucket();
@@ -129,10 +153,26 @@ class FriendListTestCase{
         return this.K;
     }
 
-    public void printBucketizedList(){
+    private int checkEmpty(){
+        int count = 0;
         for(int i = 0; i < buckets.length; i++){
-            buckets[i].removeFriends(K);
-            initial.addFriend(buckets[i].removeFriend());
+            if(buckets[i].isEmpty()){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void printBucketizedList(){
+
+        int E = checkEmpty();
+        K-=E;
+
+        for(int i = 0; i < buckets.length; i++){
+            if(!buckets[i].isEmpty()){
+                buckets[i].removeFriends(K);
+                initial.addFriend(buckets[i].removeFriend());
+            }
         }
 
         Friend[] finalList = initial.array();
