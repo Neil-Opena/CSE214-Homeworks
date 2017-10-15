@@ -10,11 +10,16 @@ public class WhiteWalkerProgram {
             int numTests = Integer.parseInt(input.nextLine());
 
             for(int i = 0; i < numTests; i++){
-                WhiteWalkerTestCase case1 = new WhiteWalkerTestCase(input.nextLine(), input.nextLine());
-                for(int j = 0; j < case1.getM(); j++){
-                    case1.iterate();
+                try{
+                    WhiteWalkerTestCase case1 = new WhiteWalkerTestCase(input.nextLine(), input.nextLine());
+                    for(int j = 0; j < case1.getM(); j++){
+                        case1.iterate();
+                    }
+                    case1.printFinalList();
+                }catch(IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                 }
-                case1.printFinalList();
+                System.out.println("---------------------------------------------");
             }
         }catch(FileNotFoundException e){
             System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
@@ -36,19 +41,25 @@ class WhiteWalkerTestCase{
     private Queue list;
     private Queue finalList;
 
-    public WhiteWalkerTestCase(String integersString, String powersString){
+    public WhiteWalkerTestCase(String integersString, String powersString) throws IllegalArgumentException{
         String[] temp1 = integersString.split(" ");
         String[] temp2 = powersString.split(" ");
         N = Integer.parseInt(temp1[0]);
         M = Integer.parseInt(temp1[1]);
         list = new Queue();
         finalList = new Queue();
-        if(N != temp2.length){
-            System.out.println("Mismatched numbers for queue number and length of powers");
-        }else{
-            for(int i = 0; i < temp2.length; i++){
-                list.enqueue(new WhiteWalker(i, Integer.parseInt(temp2[i])));
-            }
+        if(M < 0 || N < 0){
+            throw new IllegalArgumentException("Cannot have negative values for M or N");
+        }else if(M == 0){
+            throw new IllegalArgumentException("Selected 0 white walkers");
+        }else if(M > N){
+            throw new IllegalArgumentException("Value for M larger than N");
+        }else if(N != temp2.length){
+            throw new IllegalArgumentException("Mismatched numbers for queue number and length of powers");
+        }
+
+        for(int i = 0; i < temp2.length; i++){
+            list.enqueue(new WhiteWalker(i, Integer.parseInt(temp2[i])));
         }
 
     }
@@ -150,16 +161,6 @@ class Queue implements Cloneable{
             return temp;
         }
         return null;
-    }
-
-    public void printCurrentList(){
-        //FIXME deleteLater
-        Node current = front;
-        while(current!=null){
-            System.out.print(current.walker + " ");
-            current = current.next;
-        }
-        System.out.println();
     }
 
     public WhiteWalker findMax(){
