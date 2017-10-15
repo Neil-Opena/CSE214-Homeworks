@@ -22,7 +22,7 @@ public class WhiteWalkerProgram {
                 System.out.println("---------------------------------------------");
             }
         }catch(FileNotFoundException e){
-            System.out.println("File does not exist. Please place a file named \"in3.txt\" in the " +
+            System.out.println("File does not exist. Please place a file named \"in4.txt\" in the " +
                     "same directory as the src directory, and try again.");
         }catch(NullPointerException e){
             e.printStackTrace();
