@@ -18,16 +18,17 @@ public class ExtraCredit {
                 case 1 :
                     System.out.println("Insert");
                     tree.insert(key);
-
                     break;
                 case 2 :
                     System.out.println("Delete");
                     break;
                 case 3 :
                     System.out.println("Search");
+                    tree.search(key);
                     break;
                 case 4 :
                     System.out.println("Inorder");
+                    tree.inorder();
                     break;
                 case 5 :
                     System.out.println("Preorder");
@@ -50,7 +51,6 @@ class TwoThreeFourTree{
         private int[] data;
         private boolean isLeaf;
         private Node[] children;
-        private int numChildren;
         private int maxChildren;
 
         public Node(){
@@ -68,19 +68,47 @@ class TwoThreeFourTree{
         }
 
 
-        public Node(int[] data, Node[] children){
-            this();
-            this.data = data;
-            numItems = data.length;
-            this.children = children;
-            numChildren = children.length;
-        }
-
         public void printData(){
             for(int item : data){
                 System.out.print(item + " ");
             }
         }
+
+        public int getNumChildren(){
+            int temp = 0;
+            for(Node child : children){
+                if(child!=null) temp++;
+            }
+            return temp;
+        }
+    }
+
+    public void search(int key){
+        if(search(key, root)){
+            System.out.println("successful");
+            return;
+        }
+        System.out.println("failed");
+    }
+
+    public boolean search(int key, Node node){
+        if(isEmpty()){
+            return false;
+        }else if(node == null){
+            return false;
+        }
+        Node current = node;
+        int tempIndex = current.numItems;
+        for(int i = 0; i < current.numItems; i++){
+            if(current.data[i] == key){
+                return true;
+            }
+            if(current.data[i] > key){
+                tempIndex = i;
+                break;
+            }
+        }
+        return search(key,node.children[tempIndex]);
     }
 
     public void insert(int item){
@@ -106,7 +134,6 @@ class TwoThreeFourTree{
 
 
             if(current.numItems < current.maxItems && current.isLeaf){
-                System.out.println("Current is leaf: " + current.isLeaf);
                 for(int i = current.data.length - 2; i >= insertIndex; i--){
                     current.data[i + 1] = current.data[i];
                 }
@@ -122,41 +149,83 @@ class TwoThreeFourTree{
             }else{
                 if(current.numItems >= current.maxItems) {
                     //split current node
-                    System.out.println(current.isLeaf);
                     if (current == root) {
                         root = new Node(current.data[1], false);
-                        boolean isLeaf;
-                        if (current.numChildren > 0) {
-                            isLeaf = false;
+                        Node left, right;
+
+                        if (current.getNumChildren() > 0) {
+                            left = root.children[0] = new Node(current.data[0], false);
+                            right = root.children[1] = new Node(current.data[2], false);
+                            //transfer children
+
+                            //copy
+                            Node[] firstTwoChildren = new Node[current.maxChildren];
+                            firstTwoChildren[0] = current.children[0];
+                            firstTwoChildren[1] = current.children[1];
+
+
+                            Node[] lastTwoChildren = new Node[current.maxChildren];
+                            lastTwoChildren[0] = current.children[2];
+                            lastTwoChildren[1] = current.children[3];
+
+                            left.children = firstTwoChildren;
+                            right.children = lastTwoChildren;
+
+
                         } else {
-                            isLeaf = true;
+                            root.children[0] = new Node(current.data[0], true);
+                            root.children[1] = new Node(current.data[2], true);
                         }
-                        root.children[0] = new Node(current.data[0], isLeaf);
-                        root.children[1] = new Node(current.data[2], isLeaf);
                         insertIndex /= 2;
                         current = root;
                     }
                 }
                 //split child
-                if(current.children[insertIndex].numItems >= current.maxItems){
-                    int mid = current.children[insertIndex].data[1];
+                Node child = current.children[insertIndex];
+                if(child.numItems >= current.maxItems){
+                    int mid = child.data[1];
                     //bring mid to current node
                     int tempIndex = current.numItems;
-                    for(int i = 0; i < current.data.length; i++){
+                    for(int i = 0; i < current.numItems; i++){
                         if(current.data[i] > item){
                             tempIndex = i;
                             break;
                         }
-                    }
+                    }//find index where to insert mid value of child
+
                     for(int i = current.data.length - 2; i >= tempIndex; i--){
                         current.data[i + 1] = current.data[i];
                     }
                     //shift then insert
-                    current.data[insertIndex] = item;
+                    current.data[insertIndex] = mid;
                     current.numItems++;
 
                     //FIXME split node
+                    Node left, right;
+                    if(child.getNumChildren() > 0){
+                        //child has children
+
+                        left = current.children[current.getNumChildren() - 1] = new Node(child.data[0], false);
+                        right = current.children[current.getNumChildren()] = new Node(child.data[2], false);
+
+                        Node[] firstTwoChildren = new Node[current.maxChildren];
+                        firstTwoChildren[0] = child.children[0];
+                        firstTwoChildren[1] = child.children[1];
+
+                        Node[] lastTwoChildren = new Node[current.maxChildren];
+                        lastTwoChildren[0] = child.children[2];
+                        lastTwoChildren[1] = child.children[3];
+
+                        left.children = firstTwoChildren;
+                        right.children = lastTwoChildren;
+
+                    }else {
+                        current.children[current.getNumChildren() - 1] = new Node(child.data[0], true);
+                        current.children[current.getNumChildren()] = new Node(child.data[2], true);
+                    }
                 }
+                System.out.println("PARENT" + " ");
+                current.printData();
                 insert(item, current.children[insertIndex]);
             }
         }
@@ -167,6 +236,39 @@ class TwoThreeFourTree{
     }
 
     public void inorder(Node node){
+        //print left child, print data[0], print next child, print data[1]
+        switch (node.getNumChildren()){
+            case 0:
+                //no children = leaf, print all data values
+                for(int i = 0; i < node.numItems; i++){
+                    System.out.print(node.data[i] + " ");
+                }
+                break;
+            case 2 :
+                inorder(node.children[0]);
+                System.out.print(node.data[0] + " ");
+                inorder(node.children[1]);
+                //2 children --> 1 data value
+                break;
+            case 3 :
+                //3 children --> 2 data values
+                inorder(node.children[0]);
+                System.out.print(node.data[0] + " ");
+                inorder(node.children[1]);
+                System.out.print(node.data[1] + " ");
+                inorder(node.children[2]);
+                break;
+            case 4 :
+                //4 children --> 3 data values
+                inorder(node.children[0]);
+                System.out.print(node.data[0] + " ");
+                inorder(node.children[1]);
+                System.out.print(node.data[1] + " ");
+                inorder(node.children[2]);
+                System.out.print(node.data[2] + " ");
+                inorder(node.children[3]);
+                break;
+        }
 
     }
 
