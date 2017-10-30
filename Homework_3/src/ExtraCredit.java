@@ -16,25 +16,25 @@ public class ExtraCredit {
 
             switch(operation){
                 case 1 :
-                    System.out.println("Insert");
+                    //System.out.println("Insert");
                     tree.insert(key);
                     break;
                 case 2 :
-                    System.out.println("Delete");
+                    //System.out.println("Delete");
                     break;
                 case 3 :
-                    System.out.println("Search");
+                    //System.out.println("Search");
                     tree.search(key);
                     break;
                 case 4 :
-                    System.out.println("Inorder");
+                    //System.out.println("Inorder");
                     tree.inorder();
                     break;
                 case 5 :
-                    System.out.println("Preorder");
+                    //System.out.println("Preorder");
                     break;
                 case 6 :
-                    System.out.println("Postorder");
+                    //System.out.println("Postorder");
                     break;
             }
         }
@@ -118,13 +118,13 @@ class TwoThreeFourTree{
     public void insert(int item, Node node){
         if(isEmpty()){
             root = new Node(item, true);
-            root.printData();
+            //root.printData();
         }else{
             Node current = node;
 
             int insertIndex = current.numItems;
 
-            System.out.println("inserting at data index " + insertIndex);
+            //System.out.println("inserting at data index " + insertIndex);
             for(int i = 0; i < current.data.length; i++){
                 if(current.data[i] > item){
                     insertIndex = i;
@@ -144,8 +144,7 @@ class TwoThreeFourTree{
                 current.data[insertIndex] = item;
                 current.numItems++;
 
-                //FIXMe delete later
-                current.printData();
+                //current.printData();
             }else{
                 if(current.numItems >= current.maxItems) {
                     //split current node
@@ -224,8 +223,8 @@ class TwoThreeFourTree{
                         current.children[current.getNumChildren()] = new Node(child.data[2], true);
                     }
                 }
-                System.out.println("PARENT" + " ");
-                current.printData();
+                //System.out.println("PARENT" + " ");
+                //current.printData();
                 insert(item, current.children[insertIndex]);
             }
         }
@@ -233,6 +232,7 @@ class TwoThreeFourTree{
 
     public void inorder(){
         inorder(root);
+        System.out.println();
     }
 
     public void inorder(Node node){
