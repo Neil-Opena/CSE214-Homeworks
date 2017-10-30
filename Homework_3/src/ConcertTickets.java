@@ -15,8 +15,14 @@ public class ConcertTickets {
         PriorityQueue prices = new PriorityQueue(M);
         for(int i = 0; i < M; i++){
             prices.enqueue(Integer.parseInt(line2[i]));
-            prices.printPrices();
         }
+        int total = 0;
+        for(int i = 0; i < N; i++){
+            int price = prices.dequeue();
+            total += price;
+            prices.enqueue(price - 1);
+        }
+        System.out.println(total);
 
     }
 }
@@ -39,6 +45,37 @@ class PriorityQueue{
             data[index] = data[(index - 1)/2];
             data[(index - 1)/2] = temp;
             index = (index - 1)/2;
+        }
+    }
+
+    public int dequeue(){
+        int temp = data[0];
+        data[0] = data[numElements - 1];
+        data[numElements - 1] = 0;
+        numElements--;
+        fixHeap();
+        return temp;
+    }
+
+    public void fixHeap(){
+        int index = 0;
+        while(index * 2 + 1 < numElements){
+            //left child exists
+            int childIndex = index * 2 + 1;
+            if(childIndex + 1 < numElements && data[childIndex + 1] > data[childIndex]){
+                childIndex++;
+                //right child larger than left
+            }
+            if(data[childIndex] > data[index]){
+                //swap if child greater than parent
+                int temp = data[index];
+                data[index] = data[childIndex];
+                data[childIndex] = temp;
+
+                index = childIndex;
+            }else{
+                return;
+            }
         }
     }
 
