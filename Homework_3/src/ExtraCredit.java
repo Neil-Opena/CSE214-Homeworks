@@ -21,6 +21,7 @@ public class ExtraCredit {
                     break;
                 case 2 :
                     //System.out.println("Delete");
+                    tree.delete(key);
                     break;
                 case 3 :
                     //System.out.println("Search");
@@ -32,9 +33,11 @@ public class ExtraCredit {
                     break;
                 case 5 :
                     //System.out.println("Preorder");
+                    tree.preorder();
                     break;
                 case 6 :
                     //System.out.println("Postorder");
+                    tree.postorder();
                     break;
             }
         }
@@ -84,24 +87,24 @@ class TwoThreeFourTree{
     }
 
     public void search(int key){
-        if(search(key, root)){
+        if(search(key, root) != null){
             System.out.println("successful");
             return;
         }
         System.out.println("failed");
     }
 
-    public boolean search(int key, Node node){
+    public Node search(int key, Node node){
         if(isEmpty()){
-            return false;
+            return null;
         }else if(node == null){
-            return false;
+            return null;
         }
         Node current = node;
         int tempIndex = current.numItems;
         for(int i = 0; i < current.numItems; i++){
             if(current.data[i] == key){
-                return true;
+                return current;
             }
             if(current.data[i] > key){
                 tempIndex = i;
@@ -270,6 +273,123 @@ class TwoThreeFourTree{
                 break;
         }
 
+    }
+
+    public void delete(int key){
+        delete(key, root);
+    }
+
+    public void delete(int key, Node node){
+        //delete key
+        if(isEmpty()){
+            //tree has no nodes
+            System.out.println("Tree is empty, cannot delete key");
+            return;
+        }
+        Node current = search(key, node);
+        if(current == null){
+            System.out.println("Key does not exist");
+            return;
+        }
+
+        int index = current.numItems - 1;
+        for(int i = 0; i < current.numItems; i++){
+            if(current.data[i] == key){
+                index = i;
+                break;
+            }
+        }
+
+        if(current.isLeaf){
+            for(int i = index; i < current.numItems - 1; i++){
+                //shift to the left
+                current.data[i] = current.data[i + 1];
+            }
+            current.numItems--;
+            return;
+        }
+
+        int inorderSuccessor;
+    }
+
+    public void preorder(){
+        preorder(root);
+        System.out.println();
+    }
+
+    public void preorder(Node node){
+        switch (node.getNumChildren()){
+            case 0:
+                //no children = leaf, print all data values
+                for(int i = 0; i < node.numItems; i++){
+                    System.out.print(node.data[i] + " ");
+                }
+                break;
+            case 2 :
+                System.out.print(node.data[0] + " ");
+                preorder(node.children[0]);
+                preorder(node.children[1]);
+                //2 children --> 1 data value
+                break;
+            case 3 :
+                //3 children --> 2 data values
+                System.out.print(node.data[0] + " ");
+                preorder(node.children[0]);
+                System.out.print(node.data[1] + " ");
+                preorder(node.children[1]);
+                preorder(node.children[2]);
+                break;
+            case 4 :
+                //4 children --> 3 data values
+                System.out.print(node.data[0] + " ");
+                preorder(node.children[0]);
+                System.out.print(node.data[1] + " ");
+                preorder(node.children[1]);
+                System.out.print(node.data[2] + " ");
+                preorder(node.children[2]);
+                preorder(node.children[3]);
+                break;
+        }
+
+    }
+
+    public void postorder(){
+        postorder(root);
+        System.out.println();
+    }
+
+    public void postorder(Node node){
+        switch(node.getNumChildren()){
+            case 0:
+                //no children = leaf, print all data values
+                for(int i = 0; i < node.numItems; i++){
+                    System.out.print(node.data[i] + " ");
+                }
+                break;
+            case 2:
+                postorder(node.children[0]);
+                postorder(node.children[1]);
+                System.out.print(node.data[0] + " ");
+                //2 children --> 1 data value
+                break;
+            case 3:
+                //3 children --> 2 data values
+                postorder(node.children[0]);
+                postorder(node.children[1]);
+                System.out.print(node.data[0] + " ");
+                postorder(node.children[2]);
+                System.out.print(node.data[1] + " ");
+                break;
+            case 4:
+                postorder(node.children[0]);
+                postorder(node.children[1]);
+                System.out.print(node.data[0] + " ");
+                postorder(node.children[2]);
+                System.out.print(node.data[1] + " ");
+                postorder(node.children[3]);
+                System.out.print(node.data[2] + " ");
+                break;
+        }
     }
 
     public boolean isEmpty(){
