@@ -12,18 +12,14 @@ public class ConcertTickets {
             System.exit(0);
         }
 
-
-        //FIXMe negative value 3 21, 1 2 4
-        //FIXMe test values for when number of people less, number of people 0, number of person 1,
         //number of person greater
         PriorityQueue prices = new PriorityQueue(M);
         for(int i = 0; i < M; i++){
             int temp = Integer.parseInt(line2[i]);
             if(temp < 1 || temp > 1000){
-                System.out.println("Value for vacant seat is not within constraints. Please input 2 <= X[i] <= 1000");
+                System.out.println("Value for vacant seat is not within constraints. Please input 1 <= X[i] <= 1000");
                 System.exit(0);
             }
-            //FIXMe, if 0, don't dequeue and enqueue anymore
             prices.enqueue(temp);
         }
         int total = 0;

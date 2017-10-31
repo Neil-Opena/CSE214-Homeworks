@@ -301,6 +301,7 @@ class TwoThreeFourTree{
         }
 
         if(current.isLeaf){
+            //FIXMe what if leaf will have 0 items
             for(int i = index; i < current.numItems - 1; i++){
                 //shift to the left
                 current.data[i] = current.data[i + 1];
