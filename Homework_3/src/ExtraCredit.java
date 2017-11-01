@@ -39,6 +39,9 @@ public class ExtraCredit {
                     //System.out.println("Postorder");
                     tree.postorder();
                     break;
+                case 9:
+                    tree.printLevels();
+                    break;
             }
         }
     }
@@ -94,7 +97,7 @@ class TwoThreeFourTree{
         System.out.println("failed");
     }
 
-    public Node search(int key, Node node){
+    private Node search(int key, Node node){
         if(isEmpty()){
             return null;
         }else if(node == null){
@@ -118,7 +121,7 @@ class TwoThreeFourTree{
         insert(item, root);
     }
 
-    public void insert(int item, Node node){
+    private void insert(int item, Node node){
         if(isEmpty()){
             root = new Node(item, true);
             //root.printData();
@@ -238,7 +241,7 @@ class TwoThreeFourTree{
         System.out.println();
     }
 
-    public void inorder(Node node){
+    private void inorder(Node node){
         //print left child, print data[0], print next child, print data[1]
         switch (node.getNumChildren()){
             case 0:
@@ -275,42 +278,176 @@ class TwoThreeFourTree{
 
     }
 
+    public void printLevels(){
+        printLevels(root);
+        //prints in order
+    }
+
+    private void printLevels(Node node){
+        Node current = node;
+        if(node == null){
+            return;
+        }
+        else{
+            node.printData();
+            System.out.println("    items = " + node.numItems);
+            for(int i = 0; i < node.getNumChildren(); i++){
+                System.out.print(i + "- ");
+                printLevels(node.children[i]);
+            }
+        }
+    }
+
     public void delete(int key){
         delete(key, root);
     }
 
-    public void delete(int key, Node node){
+    private void delete(int key, Node node){
         //delete key
+
         if(isEmpty()){
             //tree has no nodes
             System.out.println("Tree is empty, cannot delete key");
             return;
         }
-        Node current = search(key, node);
+        Node current = node;
         if(current == null){
             System.out.println("Key does not exist");
             return;
         }
 
-        int index = current.numItems - 1;
+        //first find path of where to go
+        //fix 2 nodes
+        //delete key and replace with inorderSuccessor
+
+        if(current != root && current.getNumChildren() == 2) {
+            Node leftChild = current.children[0];
+            Node rightChild = current.children[1];
+            int temp; //number to bring up
+            if (leftChild.numItems > 1) {
+                temp = leftChild.data[leftChild.numItems - 1];
+                //shift current data to the right
+                for (int i = current.data.length - 2; i >= 0; i--) {
+                    current.data[i + 1] = current.data[i];
+                }
+                current.data[0] = temp;
+                leftChild.numItems--;
+                current.numItems++;
+                //transfer right child
+                if (leftChild.getNumChildren() > 0) {
+                    Node transferChild = leftChild.children[leftChild.getNumChildren() - 1];
+                    //shift current right child
+                    for (int i = current.getNumChildren() - 2; i >= 0; i--) {
+                        current.children[i + 1] = current.children[i];
+                    }
+                    current.children[0] = transferChild;
+                    leftChild.children[leftChild.getNumChildren() - 1] = null;
+                }
+
+            } else if (rightChild.numItems > 1) {
+                temp = rightChild.data[rightChild.numItems - 1];
+                //no shift needed
+                current.data[current.numItems - 1] = temp;
+                rightChild.numItems--;
+                current.numItems++;
+                //transfer left child
+                if (rightChild.getNumChildren() > 0) {
+                    Node transferChild = rightChild.children[0];
+                    //shift remaining children in right child
+                    for (int i = 0; i < rightChild.getNumChildren() - 1; i++) {
+                        rightChild.children[i] = rightChild.children[i + 1];
+                    }
+                    //delete last Child
+                    rightChild.children[rightChild.getNumChildren() - 1] = null;
+                    //transfer to to right of current
+                    current.children[current.getNumChildren() - 1] = transferChild;
+                }
+            } else {
+                //merge both
+                current.data[1] = current.data[0];
+                current.data[0] = leftChild.data[0];
+                current.data[2] = rightChild.data[0];
+                current.numItems = 3;
+
+                //transfer children
+                if (leftChild.getNumChildren() > 0) {
+                    current.children[0] = leftChild.children[0];
+                    current.children[1] = leftChild.children[1];
+                } else if (rightChild.getNumChildren() > 0) {
+                    current.children[2] = rightChild.children[0];
+                    current.children[3] = rightChild.children[1];
+                }
+
+            }
+        }
+
+        int tempIndex = current.numItems;
+        Integer indexObject = null;
+
         for(int i = 0; i < current.numItems; i++){
             if(current.data[i] == key){
-                index = i;
+                //current contains key to delete
+                indexObject = i;
+                break;
+            }
+            if(current.data[i] > key){
+                tempIndex = i;
                 break;
             }
         }
-
-        if(current.isLeaf){
-            //FIXMe what if leaf will have 0 items
-            for(int i = index; i < current.numItems - 1; i++){
-                //shift to the left
-                current.data[i] = current.data[i + 1];
+        if(indexObject != null){
+            //current node contains key to delete
+            int index = indexObject;
+            if(current.isLeaf){
+                for(int i = index; i < current.numItems - 1; i++){
+                    //shift values to the left
+                    current.data[i] = current.data[i + 1];
+                }
+                current.numItems--;
+                return;
             }
-            current.numItems--;
-            return;
-        }
+            //current is not a leaf
+            //replace with inorder successor
+            //FIXMe
+            Node tempChild = current.children[index + 1];
+            while(tempChild.getNumChildren() > 1){
+                //keep going left until it is a leaf
+                tempChild = tempChild.children[0];
+            }
+            //delete first value at child containing successor because it is successor
+            int successor = tempChild.data[0];
+            for(int i = 0; i < tempChild.numItems - 1; i++){
+                tempChild.data[i] = tempChild.data[i + 1];
+            }
+            tempChild.numItems--;
 
-        int inorderSuccessor;
+            current.data[index] = successor;
+            //replace key with successor
+            return;
+        }else{
+            //look for key in child
+            Node child = node.children[tempIndex];
+            if(child.numItems == 1){
+                if(tempIndex != node.numItems) {
+                    int fix = node.data[tempIndex];
+                    int deleted = child.data[0];
+                    child.data[0] = fix;
+                    node.data[tempIndex] = node.children[tempIndex + 1].data[0];
+
+                    delete(node.children[tempIndex + 1].data[0]);
+                }else{
+                    int fix = node.data[tempIndex - 1];
+                    int deleted = child.data[0];
+                    child.data[0] = fix;
+                    int numItems = node.children[tempIndex - 1].numItems;
+                    node.data[tempIndex - 1] = node.children[tempIndex - 1].data[numItems - 1];
+
+                    delete(node.children[tempIndex - 1].data[numItems - 1]);
+                }
+            }else{
+                delete(key, node.children[tempIndex]);
+            }
+        }
     }
 
     public void preorder(){
@@ -318,7 +455,7 @@ class TwoThreeFourTree{
         System.out.println();
     }
 
-    public void preorder(Node node){
+    private void preorder(Node node){
         switch (node.getNumChildren()){
             case 0:
                 //no children = leaf, print all data values
@@ -359,7 +496,7 @@ class TwoThreeFourTree{
         System.out.println();
     }
 
-    public void postorder(Node node){
+    private void postorder(Node node){
         switch(node.getNumChildren()){
             case 0:
                 //no children = leaf, print all data values
@@ -392,6 +529,7 @@ class TwoThreeFourTree{
                 break;
         }
     }
+
 
     public boolean isEmpty(){
         return root == null;
