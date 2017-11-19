@@ -35,9 +35,8 @@ public class Question_1 {
             int key = T - data[i]; // look for a value that satisfies this key
             Integer tempAnswer = (Integer) map.get(key); // O(1) * n = O(n)
             if(tempAnswer!=null && (i != tempAnswer)){   // create an object if it finds a value
-                Answer answer = new Answer(i, tempAnswer);
                 //May assume that each input would have exactly one solution
-                System.out.print(answer);
+                System.out.print("[" + i + ", " + tempAnswer + "]");
                 sum = true;
                 break;
             }
@@ -47,22 +46,9 @@ public class Question_1 {
             System.out.print("[-1, -1]");
         }
 
-        //FIXme account for duplicates
+        //FIXme continue testing
+        //FIXme 4 10 -- 5 5 5 1
     }
 }
 
 
-class Answer{
-    private int index1;
-    private int index2;
-
-    public Answer(int index1, int index2){
-        this.index1 = index1;
-        this.index2 = index2;
-    }
-
-    public String toString(){
-        return "[" + index1 + ", " + index2 + "]";
-    }
-
-}
