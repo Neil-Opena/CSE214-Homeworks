@@ -18,7 +18,7 @@ public class Question_1 {
 
         HashMap map;
         if(N > 16){
-            map = new HashMap(N + (0.75 * N);
+            map = new HashMap(N + (int) (0.75 * N));
             // create a new HashMap with a larger capacity
             // 75% of N to decrease the load factor
         }else{
@@ -27,22 +27,30 @@ public class Question_1 {
 
         //store in hash map
         for(int i = 0; i < N; i++){
-            map.put(data[i], data[i]); // O(1) * n = 0(n)
+            Number num = new Number(data[i], i);
+            map.put(data[i], num); // O(1) * n = 0(n)
         }
 
-
-        ArrayList<Answer> answers = new ArrayList();
-
-
-
+        boolean sum = false;
         for(int i = 0; i < N; i++){
             int key = T - data[i]; // look for a value that satisfies this key
-            Integer answer = (Integer) map.get(key); // O(1) * n = O(n)
-            if(answer!=null){   // create an object if it finds a value
+            Number tempAnswer = (Number) map.get(key); // O(1) * n = O(n)
+            if(tempAnswer!=null){   // create an object if it finds a value
+                Answer answer = new Answer(i, tempAnswer.getIndex());
 
+                //May assume that each input would have exactly one solution
+                System.out.print(answer);
+                sum = true;
+                break;
             }
         }
+
+        if(!sum){
+            System.out.print("[-1, -1]");
+        }
+
         //FIXme try for negative numbers
+        //FIXme account for duplicates
     }
 }
 
