@@ -27,17 +27,15 @@ public class Question_1 {
 
         //store in hash map
         for(int i = 0; i < N; i++){
-            Number num = new Number(data[i], i);
-            map.put(data[i], num); // O(1) * n = 0(n)
+            map.put(data[i], i); // O(1) * n = 0(n)
         }
 
         boolean sum = false;
         for(int i = 0; i < N; i++){
             int key = T - data[i]; // look for a value that satisfies this key
-            Number tempAnswer = (Number) map.get(key); // O(1) * n = O(n)
-            if(tempAnswer!=null){   // create an object if it finds a value
-                Answer answer = new Answer(i, tempAnswer.getIndex());
-
+            Integer tempAnswer = (Integer) map.get(key); // O(1) * n = O(n)
+            if(tempAnswer!=null && (i != tempAnswer)){   // create an object if it finds a value
+                Answer answer = new Answer(i, tempAnswer);
                 //May assume that each input would have exactly one solution
                 System.out.print(answer);
                 sum = true;
@@ -49,28 +47,10 @@ public class Question_1 {
             System.out.print("[-1, -1]");
         }
 
-        //FIXme try for negative numbers
         //FIXme account for duplicates
     }
 }
 
-class Number{
-    private int number;
-    private int index;
-
-    public Number(int number, int index){
-        this.number = number;
-        this.index = index;
-    }
-
-    public int getIndex(){
-        return this.index;
-    }
-
-    public int getNumber(){
-        return this.number;
-    }
-}
 
 class Answer{
     private int index1;
