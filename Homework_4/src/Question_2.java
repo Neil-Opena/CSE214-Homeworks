@@ -20,7 +20,6 @@ public class Question_2 {
         HashMap map = new HashMap(N * N);
         for(int i = 0; i < N; i++){
             for(int j = i + 1; j < N; j++){
-                //instead of one value stored, perhaps an array
 
                 Value tempValue = new Value(data[i] + data[j], i, j);
                 int key = tempValue.getSum() % M;
@@ -38,82 +37,107 @@ public class Question_2 {
             }
         }
 
+
         int key;
-        ArrayList<Answer> answerList = new ArrayList<>();
+        HashMap answerMap = new HashMap();
 
         for(int i = 0; i < N; i++) {
-            //look for value st.
-            key = (data[i] % M);
-            if (key != 0) {
-                key = M - key;
+            if(data[i] % M == 0){
+                key = 0;
+            }else{
+                key = (M - (data[i] % M));
             }
 
             ArrayList<Value> retrievedList = (ArrayList<Value>) map.get(key);
 
             if (retrievedList != null) {
                 for (int j = 0; j < retrievedList.size(); j++) {
-                    Value temporaryValue = retrievedList.get(j);
-                    if (temporaryValue.getIndex2() != i && temporaryValue.getIndex1() != i) {
-                        Answer answer = new Answer(temporaryValue, i);
+
+                    Value tempValue = retrievedList.get(j);
+                    if(tempValue.getIndex1() != i && tempValue.getIndex2() != i){
+                        //System.out.println(tempValue + " ===== data[" + i + "] .. " + data[i]);
+                        Answer answer = new Answer(i, tempValue.getIndex1(), tempValue.getIndex2());
                         answer.sortTrio();
-                        System.out.println(answer);
+                        //FIXMe problem may be in sort
+                        String testString = answer.getStringRepresentation();
+                        answerMap.put(testString, answer);
                     }
+
                 }
             }
         }
+
+        //used for testing
+        Object[] a = answerMap.values().toArray();
+        for(Object i : a){
+            System.out.println(i);
+        }
+
+        System.out.println(answerMap.size());
+
     }
 
 }
 
+class Answer{
+    private int index1;
+    private int index2;
+    private int index3;
 
-class Answer {
-    private Value value;
-    private int index;
-
-    public Answer(Value value, int index){
-        this.value = value;
-        this.index = index;
+    public Answer(int index1, int index2, int index3){
+        this.index1 = index1;
+        this.index2 = index2;
+        this.index3 = index3;
     }
 
-    public Value getValue(){
-        return this.value;
+    public int getIndex3() {
+        return index3;
     }
 
-    public String getString(){
-        return "" + value.getIndex1() + value.getIndex2() + index;
+    public int getIndex2() {
+        return index2;
+    }
+
+    public int getIndex1() {
+        return index1;
+    }
+
+    public String getStringRepresentation() {
+        return "" + index1 + index2 + index3;
     }
 
     public String toString(){
-        return ("[" + value.getIndex1() + ", " + value.getIndex2() + ", " + index + "]");
+        return ("[" + index1 + ", " + index2 + ", " + index3 + "]");
     }
 
     public void sortTrio(){
-        if(value.getIndex1() <= value.getIndex2() && value.getIndex1() <= index){
+        if(index1 <= index2 && index1 <= index3){
             //min = index1
             //no swap necessary for index1
-        }else if(value.getIndex2() <= value.getIndex1() && value.getIndex2() <= index){
+        }else if(index2 <= index1 && index2 <= index3){
             //min = index2
-            int temp = value.getIndex1();
-            value.setIndex1(value.getIndex2());
-            value.setIndex2(temp);
+            int temp = index1;
+            index1 = index2;
+            index2 = temp;
 
         }else{
-            //min = index
-            int temp = value.getIndex1();
-            value.setIndex1(index);
-            index = temp;
+            //min = index3
+            int temp = index1;
+            index1 = index3;
+            index3 = temp;
         }
 
-        if(value.getIndex2() <= index){
+        if(index2 <= index3){
             //no swap necessary
         }else{
-            int temp = value.getIndex2();
-            value.setIndex2(index);
-            index = temp;
+            int temp = index2;
+            index2 = index3;
+            index3 = temp;
         }
     }
 
 }
+
 
 class Value{
     private int sum;
