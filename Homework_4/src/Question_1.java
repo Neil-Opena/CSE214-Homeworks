@@ -11,6 +11,11 @@ public class Question_1 {
         int N = Integer.parseInt(temp[0]);
         int T = Integer.parseInt(temp[1]);
 
+        if(N < 0 ){
+            System.out.println("N is negative");
+            System.exit(1);
+        }
+
         int[] data = new int[N];
         for(int i = 0; i < N; i++){
             data[i] = Integer.parseInt(dataString[i]);
@@ -45,9 +50,6 @@ public class Question_1 {
         if(!sum){
             System.out.print("[-1, -1]");
         }
-
-        //FIXme continue testing
-        //FIXme 4 10 -- 5 5 5 1
     }
 }
 
