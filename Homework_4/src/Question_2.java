@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 public class Question_2 {
 
@@ -11,6 +10,10 @@ public class Question_2 {
 
         int N = Integer.parseInt(temp[0]);
         int M = Integer.parseInt(temp[1]);
+        if(N < 0 || M < 0){
+            System.out.println("N or M is negative");
+            System.exit(1);
+        }
 
         int[] data = new int[N];
         for(int i = 0; i < N; i++) {
@@ -58,7 +61,6 @@ public class Question_2 {
                         //System.out.println(tempValue + " ===== data[" + i + "] .. " + data[i]);
                         Answer answer = new Answer(i, tempValue.getIndex1(), tempValue.getIndex2());
                         answer.sortTrio();
-                        //FIXMe problem may be in sort
                         String testString = answer.getStringRepresentation();
                         answerMap.put(testString, answer);
                     }
@@ -68,10 +70,10 @@ public class Question_2 {
         }
 
         //used for testing
-        Object[] a = answerMap.values().toArray();
+        /*Object[] a = answerMap.values().toArray();
         for(Object i : a){
             System.out.println(i);
-        }
+        }*/
 
         System.out.println(answerMap.size());
 
