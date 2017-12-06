@@ -25,7 +25,11 @@ public class PrisonBreak {
 
                 //FIXMe Delete Later
                 System.out.println(N);
+
                 case1.printMatrix();
+
+                System.out.println(case1.getNumEscapePaths());
+                System.out.println("-------------------------------------");
             }
 
         }catch(FileNotFoundException e){
@@ -104,13 +108,37 @@ class TestCase{
 
             if(!marked[i][j]){
                 marked[i][j] = true;
-                System.out.print(vertex.val + "-");
+                System.out.print("[" + vertex.row + "," + vertex.col + "] - ");
 
                 //check right neighbor
                 if(j + 1 < N){
                     if(matrix[i][j + 1] == 0){
                         int val = matrix[i][j + 1];
                         myStack.push(new Node(val, i, j + 1));
+                    }
+                }
+
+                //check bottom neighbor
+                if(i + 1 < N){
+                    if(matrix[i + 1][j] == 0){
+                        int val = matrix[i + 1][j];
+                        myStack.push(new Node(val, i + 1, j));
+                    }
+                }
+
+                //check left neighbor
+                if((j - 1) >= 0){
+                    if(matrix[i][j - 1] == 0){
+                        int val = matrix[i][j - 1];
+                        myStack.push(new Node(val, i, j - 1));
+                    }
+                }
+
+                //check top neighbor
+                if((i - 1) >= 0){
+                    if(matrix[i - 1][j] == 0){
+                        int val = matrix[i - 1][j];
+                        myStack.push(new Node(val, i - 1, j));
                     }
                 }
 
