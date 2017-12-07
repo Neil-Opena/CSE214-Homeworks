@@ -55,6 +55,11 @@ class TestCase{
             this.row = row;
             this.col = col;
         }
+
+        public String toString(){
+
+            return ("[" + (char) ('a' + row) + "," + col + "] ");
+        }
     }
 
     public TestCase(int N, int[][] matrix){
@@ -102,47 +107,63 @@ class TestCase{
 
         Node vertex;
         while(!myStack.isEmpty()){
-            vertex = myStack.pop();
+            vertex = myStack.peek();
+            System.out.println("Current Vertex = " + vertex);
+            System.out.println("Stack = " + myStack.toString());
             int i = vertex.row;
             int j = vertex.col;
 
             if(!marked[i][j]){
                 marked[i][j] = true;
-                System.out.print("[" + vertex.row + "," + vertex.col + "] - ");
-
-                //check right neighbor
-                if(j + 1 < N){
-                    if(matrix[i][j + 1] == 0){
-                        int val = matrix[i][j + 1];
-                        myStack.push(new Node(val, i, j + 1));
-                    }
-                }
+                //System.out.println(vertex);
 
                 //check bottom neighbor
                 if(i + 1 < N){
-                    if(matrix[i + 1][j] == 0){
+                    if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
                         int val = matrix[i + 1][j];
                         myStack.push(new Node(val, i + 1, j));
+                        continue;
                     }
                 }
 
-                //check left neighbor
-                if((j - 1) >= 0){
-                    if(matrix[i][j - 1] == 0){
-                        int val = matrix[i][j - 1];
-                        myStack.push(new Node(val, i, j - 1));
+                //check right neighbor
+                if(j + 1 < N){
+                    if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
+                        int val = matrix[i][j + 1];
+                        myStack.push(new Node(val, i, j + 1));
+                        continue;
                     }
                 }
 
                 //check top neighbor
                 if((i - 1) >= 0){
-                    if(matrix[i - 1][j] == 0){
+                    if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
                         int val = matrix[i - 1][j];
                         myStack.push(new Node(val, i - 1, j));
+                        continue;
+                    }
+                }
+
+                //check left neighbor
+                if((j - 1) >= 0){
+                    if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
+                        int val = matrix[i][j - 1];
+                        myStack.push(new Node(val, i, j - 1));
+                        continue;
                     }
                 }
 
             }
+
+            System.out.print("cannot go further = ");
+            Node popped = myStack.pop();
+            System.out.println("Popped " + popped);
+
+            Node peeked = myStack.peek();
+            marked[peeked.row][peeked.col] = false;
+
+
+
         }
 
         return count;
