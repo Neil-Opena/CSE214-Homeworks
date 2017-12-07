@@ -29,6 +29,7 @@ public class PrisonBreak {
                 case1.printMatrix();
 
                 System.out.println(case1.getNumEscapePaths());
+                //System.out.println(case1.countPaths());
                 System.out.println("-------------------------------------");
             }
 
@@ -42,17 +43,18 @@ class TestCase{
     private int N;
     private int[][] matrix;
     private boolean[][] marked;
-    private boolean[][] helper;
     private Node start;
     private Node end;
 
     private class Node{
         private int row;
         private int col;
+        private ArrayList<Node> neighborsVisited;
 
         public Node(int row, int col){
             this.row = row;
             this.col = col;
+            neighborsVisited = new ArrayList<>();
         }
 
         public String toString(){
@@ -69,16 +71,7 @@ class TestCase{
         start = new Node(0, 0);
         end = new Node(N - 1, N - 1);
 
-        //initialize marked matrix where 1 = false
-        for(int i = 0; i < N; i++){
-            for(int j = 0; j < N; j++){
-                if(matrix[i][j] == 1){
-                    marked[i][j] = true;
-                }else{
-                    marked[i][j] = false;
-                }
-            }
-        }
+        clearMarked();
 
     }
 
@@ -91,12 +84,13 @@ class TestCase{
         }
     }
 
+
     public int getNumEscapePaths() {
         int count = 0;
-        /*
-        If the first cell [0,0] and the last cell [N-1,N-1] contain motion detectors
-        John can't break out of the prison
-        */
+
+        //If the first cell [0,0] and the last cell [N-1,N-1] contain motion detectors
+        //John can't break out of the prison
+
 
         if(matrix[start.row][start.col] == 1 && matrix[end.row][end.col] == 1){
             return count;
@@ -106,9 +100,7 @@ class TestCase{
         myStack.push(start); //push starting cell
 
         Node vertex;
-
-        //FIXME i think it should be a list
-        ArrayList<Node> justVisited = new ArrayList<>();
+        Node justVisited = null;
 
         while(!myStack.isEmpty()){
             vertex = myStack.peek();
@@ -116,6 +108,25 @@ class TestCase{
             System.out.println("Stack = " + myStack.toString());
             int i = vertex.row;
             int j = vertex.col;
+
+            if(justVisited != null){
+                //System.out.print(justVisited + " - justVisited   j.v nodes = {");
+
+                for(int index = 0; index < justVisited.neighborsVisited.size(); index++){
+                    Node temp = justVisited.neighborsVisited.get(index);
+                    //System.out.print(temp + ", ");
+
+                    //change marked of visited
+                    int tempRow = temp.row;
+                    int tempCol = temp.col;
+                    marked[tempRow][tempCol] = false;
+                }
+
+                justVisited.neighborsVisited.clear();
+
+                //System.out.println("}");
+            }
+
 
             if(i == N - 1 && j == N - 1){
                 //path reached
@@ -132,33 +143,44 @@ class TestCase{
                 System.out.println("__________________________");
             }
 
+            //FIXMe
+
             if(!marked[i][j]){
                 marked[i][j] = true;
                 //System.out.println(vertex);
-
-                if(checkBottom(myStack, i, j)){
+                Node bottom = checkBottom(myStack, i, j);
+                if(bottom != null){
+                    vertex.neighborsVisited.add(bottom);
                     continue;
                 }
 
-                if(checkRight(myStack, i, j)){
+                Node right = checkRight(myStack, i, j);
+                if(right != null){
+                    vertex.neighborsVisited.add(right);
                     continue;
                 }
 
-                if(checkTop(myStack, i, j)){
+                Node top = checkTop(myStack, i, j);
+                if(top != null){
+                    vertex.neighborsVisited.add(top);
                     continue;
                 }
 
-                if(checkLeft(myStack, i, j)){
+                Node left = checkLeft(myStack, i, j);
+                if(left != null){
+                    vertex.neighborsVisited.add(left);
                     continue;
                 }
+
 
             }
 
             System.out.print("cannot go further = ");
             Node popped = myStack.pop();
             System.out.println("Popped " + popped);
-
             //FIXME equals method?
+
+            justVisited = popped;
 
             if(popped.row == 0 && popped.col == 0){
                 continue;
@@ -167,59 +189,129 @@ class TestCase{
             Node peeked = myStack.peek();
             marked[peeked.row][peeked.col] = false;
 
+
         }
 
         return count;
     }
 
+
     //FIXME once you backtrack, mark others as false but don't traverse it
-    //FIXME check if i and j is in map already
 
-    //FIXME or if it was just visited dont visit it
-    //FIXME should i clear hashmap?
+    //FIXME mark nodes as traversing so there are no loops (done by turning marked into true)
+    //FIXME unmark current cell and backtrack --> look for other paths
 
-    private boolean checkBottom(Stack<Node> stack, int i, int j){
+
+    //FIXME backtrack but don't visit it
+
+    /*
+    public int countPaths(){
+        int count = 0;
+        //FIXME standard check if first and last cell have 1
+
+        return DFS(start);
+    }
+
+    private int DFS(Node vertex){
+        int i = vertex.row;
+        int j = vertex.col;
+        marked[i][j] = true;
+        System.out.print(vertex + " ");
+        if(vertex.equals(end)){
+            System.out.println("END");
+            //all marked = false?
+            return 0;
+        }
+
+        //checkBottom
         if((i + 1) < N){
             if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
-
-                stack.push(new Node( i + 1, j));
-                return true;
+                DFS(new Node(i + 1, j));
             }
         }
-        return false;
-    }
 
-    private boolean checkRight(Stack<Node> stack, int i, int j){
+        //checkRight
         if((j + 1) < N){
             if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
-
-                stack.push(new Node(i, j + 1));
-                return true;
+                DFS(new Node(i, j + 1));
             }
         }
-        return false;
-    }
 
-    private boolean checkTop(Stack<Node> stack, int i, int j){
+        //checkTop
         if((i - 1) >= 0){
             if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
-
-                stack.push(new Node(i - 1, j));
-                return true;
+                DFS(new Node(i - 1, j));
             }
         }
-        return false;
+
+        //checkLeft
+        if((j - 1) >= 0){
+            if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
+                DFS(new Node(i, j - 1));
+            }
+        }
+
+        System.out.print(vertex + "* ");
+        //refix marked? 4 ?
+        return 0;
+    }
+    */
+
+    private void clearMarked(){
+        //initialize marked matrix where 1 = false
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                if(matrix[i][j] == 1){
+                    marked[i][j] = true;
+                }else{
+                    marked[i][j] = false;
+                }
+            }
+        }
     }
 
-    private boolean checkLeft(Stack<Node> stack, int i, int j){
+    private Node checkBottom(Stack<Node> stack, int i, int j){
+        if((i + 1) < N){
+            if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
+                Node temp = new Node(i + 1, j);
+                stack.push(temp);
+                return temp;
+            }
+        }
+        return null;
+    }
+
+    private Node checkRight(Stack<Node> stack, int i, int j){
+        if((j + 1) < N){
+            if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
+                Node temp = new Node(i, j + 1);
+                stack.push(temp);
+                return temp;
+            }
+        }
+        return null;
+    }
+
+    private Node checkTop(Stack<Node> stack, int i, int j){
+        if((i - 1) >= 0){
+            if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
+                Node temp = new Node(i - 1, j);
+                stack.push(temp);
+                return temp;
+            }
+        }
+        return null;
+    }
+
+    private Node checkLeft(Stack<Node> stack, int i, int j){
        if((j - 1) >= 0){
            if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
-
-                stack.push(new Node(i, j - 1));
-                return true;
+                Node temp = new Node(i, j - 1);
+                stack.push(temp);
+                return temp;
            }
         }
-        return false;
+        return null;
     }
 
 }
