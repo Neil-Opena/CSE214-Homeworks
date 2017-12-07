@@ -42,6 +42,7 @@ class TestCase{
     private int N;
     private int[][] matrix;
     private boolean[][] marked;
+    private boolean[][] helper;
     private Node start;
     private Node end;
 
@@ -118,6 +119,9 @@ class TestCase{
                 marked[i][j] = true;
                 count++;
                 myStack.pop();
+                //marked[i][j] = false;
+                //vertex.visited = true;
+
                 vertex = myStack.peek();
                 System.out.println("Current Vertex = " + vertex);
                 i = vertex.row;
@@ -142,16 +146,27 @@ class TestCase{
                     continue;
                 }
 
-                //check left neighbor
                 if(checkLeft(myStack, i, j)){
                     continue;
                 }
+
+                //FIXME visited?
 
             }
 
             System.out.print("cannot go further = ");
             Node popped = myStack.pop();
+            //marked[popped.row][popped.col] = false;
             System.out.println("Popped " + popped);
+            //popped.visited = true;
+
+            //FIXME
+            marked[popped.row][popped.col] = false;
+
+
+            if(popped.row == 0 && popped.col == 0){
+                continue;
+            }
 
             Node peeked = myStack.peek();
             marked[peeked.row][peeked.col] = false;
