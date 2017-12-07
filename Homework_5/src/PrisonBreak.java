@@ -47,12 +47,10 @@ class TestCase{
     private Node end;
 
     private class Node{
-        private int val;
         private int row;
         private int col;
 
-        public Node(int val, int row, int col){
-            this.val = val;
+        public Node(int row, int col){
             this.row = row;
             this.col = col;
         }
@@ -68,8 +66,8 @@ class TestCase{
         this.matrix = matrix;
         this.marked = new boolean[N][N];
 
-        start = new Node(matrix[0][0], 0, 0);
-        end = new Node(matrix[N - 1][N - 1], N - 1, N - 1);
+        start = new Node(0, 0);
+        end = new Node(N - 1, N - 1);
 
         //initialize marked matrix where 1 = false
         for(int i = 0; i < N; i++){
@@ -99,11 +97,13 @@ class TestCase{
         If the first cell [0,0] and the last cell [N-1,N-1] contain motion detectors
         John can't break out of the prison
         */
-        if (start.val == 1 && end.val == 1) {
+
+        if(matrix[start.row][start.col] == 1 && matrix[end.row][end.col] == 1){
             return count;
         }
 
         Stack<Node> myStack = new Stack<>(); //create stack for DFS
+        HashMap map = new HashMap();
         myStack.push(start); //push starting cell
 
         Node vertex;
@@ -118,9 +118,8 @@ class TestCase{
                 //path reached
                 marked[i][j] = true;
                 count++;
+                //FIXME put in map?
                 myStack.pop();
-                //marked[i][j] = false;
-                //vertex.visited = true;
 
                 vertex = myStack.peek();
                 System.out.println("Current Vertex = " + vertex);
@@ -150,19 +149,13 @@ class TestCase{
                     continue;
                 }
 
-                //FIXME visited?
-
             }
 
             System.out.print("cannot go further = ");
             Node popped = myStack.pop();
-            //marked[popped.row][popped.col] = false;
             System.out.println("Popped " + popped);
-            //popped.visited = true;
 
-            //FIXME
-            marked[popped.row][popped.col] = false;
-
+            //FIXME put in map?
 
             if(popped.row == 0 && popped.col == 0){
                 continue;
@@ -176,11 +169,13 @@ class TestCase{
         return count;
     }
 
+    //FIXME once you backtrack, mark others as false but don't traverse it
+    //FIXME check if i and j is in map already
+
     private boolean checkBottom(Stack<Node> stack, int i, int j){
         if((i + 1) < N){
             if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
-                int val = matrix[i + 1][j];
-                stack.push(new Node(val, i + 1, j));
+                stack.push(new Node( i + 1, j));
                 return true;
             }
         }
@@ -190,8 +185,7 @@ class TestCase{
     private boolean checkRight(Stack<Node> stack, int i, int j){
         if((j + 1) < N){
             if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
-                int val = matrix[i][j + 1];
-                stack.push(new Node(val, i, j + 1));
+                stack.push(new Node(i, j + 1));
                 return true;
             }
         }
@@ -201,8 +195,7 @@ class TestCase{
     private boolean checkTop(Stack<Node> stack, int i, int j){
         if((i - 1) >= 0){
             if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
-                int val = matrix[i - 1][j];
-                stack.push(new Node(val, i - 1, j));
+                stack.push(new Node(i - 1, j));
                 return true;
             }
         }
@@ -212,8 +205,7 @@ class TestCase{
     private boolean checkLeft(Stack<Node> stack, int i, int j){
        if((j - 1) >= 0){
            if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
-                int val = matrix[i][j - 1];
-                stack.push(new Node(val, i, j - 1));
+                stack.push(new Node(i, j - 1));
                 return true;
            }
         }
