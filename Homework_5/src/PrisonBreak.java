@@ -113,44 +113,38 @@ class TestCase{
             int i = vertex.row;
             int j = vertex.col;
 
+            if(i == N - 1 && j == N - 1){
+                //path reached
+                marked[i][j] = true;
+                count++;
+                myStack.pop();
+                vertex = myStack.peek();
+                System.out.println("Current Vertex = " + vertex);
+                i = vertex.row;
+                j = vertex.col;
+                marked[i][j] = false;
+                System.out.println("__________________________");
+            }
+
             if(!marked[i][j]){
                 marked[i][j] = true;
                 //System.out.println(vertex);
 
-                //check bottom neighbor
-                if(i + 1 < N){
-                    if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
-                        int val = matrix[i + 1][j];
-                        myStack.push(new Node(val, i + 1, j));
-                        continue;
-                    }
+                if(checkBottom(myStack, i, j)){
+                    continue;
                 }
 
-                //check right neighbor
-                if(j + 1 < N){
-                    if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
-                        int val = matrix[i][j + 1];
-                        myStack.push(new Node(val, i, j + 1));
-                        continue;
-                    }
+                if(checkRight(myStack, i, j)){
+                    continue;
                 }
 
-                //check top neighbor
-                if((i - 1) >= 0){
-                    if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
-                        int val = matrix[i - 1][j];
-                        myStack.push(new Node(val, i - 1, j));
-                        continue;
-                    }
+                if(checkTop(myStack, i, j)){
+                    continue;
                 }
 
                 //check left neighbor
-                if((j - 1) >= 0){
-                    if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
-                        int val = matrix[i][j - 1];
-                        myStack.push(new Node(val, i, j - 1));
-                        continue;
-                    }
+                if(checkLeft(myStack, i, j)){
+                    continue;
                 }
 
             }
@@ -162,11 +156,53 @@ class TestCase{
             Node peeked = myStack.peek();
             marked[peeked.row][peeked.col] = false;
 
-
-
         }
 
         return count;
+    }
+
+    private boolean checkBottom(Stack<Node> stack, int i, int j){
+        if((i + 1) < N){
+            if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
+                int val = matrix[i + 1][j];
+                stack.push(new Node(val, i + 1, j));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkRight(Stack<Node> stack, int i, int j){
+        if((j + 1) < N){
+            if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
+                int val = matrix[i][j + 1];
+                stack.push(new Node(val, i, j + 1));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkTop(Stack<Node> stack, int i, int j){
+        if((i - 1) >= 0){
+            if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
+                int val = matrix[i - 1][j];
+                stack.push(new Node(val, i - 1, j));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkLeft(Stack<Node> stack, int i, int j){
+       if((j - 1) >= 0){
+           if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
+                int val = matrix[i][j - 1];
+                stack.push(new Node(val, i, j - 1));
+                return true;
+           }
+        }
+        return false;
     }
 
 }
