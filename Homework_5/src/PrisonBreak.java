@@ -103,10 +103,13 @@ class TestCase{
         }
 
         Stack<Node> myStack = new Stack<>(); //create stack for DFS
-        HashMap map = new HashMap();
         myStack.push(start); //push starting cell
 
         Node vertex;
+
+        //FIXME i think it should be a list
+        ArrayList<Node> justVisited = new ArrayList<>();
+
         while(!myStack.isEmpty()){
             vertex = myStack.peek();
             System.out.println("Current Vertex = " + vertex);
@@ -118,8 +121,8 @@ class TestCase{
                 //path reached
                 marked[i][j] = true;
                 count++;
-                //FIXME put in map?
-                myStack.pop();
+
+                Node popped = myStack.pop();
 
                 vertex = myStack.peek();
                 System.out.println("Current Vertex = " + vertex);
@@ -155,7 +158,7 @@ class TestCase{
             Node popped = myStack.pop();
             System.out.println("Popped " + popped);
 
-            //FIXME put in map?
+            //FIXME equals method?
 
             if(popped.row == 0 && popped.col == 0){
                 continue;
@@ -172,9 +175,13 @@ class TestCase{
     //FIXME once you backtrack, mark others as false but don't traverse it
     //FIXME check if i and j is in map already
 
+    //FIXME or if it was just visited dont visit it
+    //FIXME should i clear hashmap?
+
     private boolean checkBottom(Stack<Node> stack, int i, int j){
         if((i + 1) < N){
             if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
+
                 stack.push(new Node( i + 1, j));
                 return true;
             }
@@ -185,6 +192,7 @@ class TestCase{
     private boolean checkRight(Stack<Node> stack, int i, int j){
         if((j + 1) < N){
             if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
+
                 stack.push(new Node(i, j + 1));
                 return true;
             }
@@ -195,6 +203,7 @@ class TestCase{
     private boolean checkTop(Stack<Node> stack, int i, int j){
         if((i - 1) >= 0){
             if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
+
                 stack.push(new Node(i - 1, j));
                 return true;
             }
@@ -205,6 +214,7 @@ class TestCase{
     private boolean checkLeft(Stack<Node> stack, int i, int j){
        if((j - 1) >= 0){
            if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
+
                 stack.push(new Node(i, j - 1));
                 return true;
            }
