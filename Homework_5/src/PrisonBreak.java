@@ -101,6 +101,7 @@ class TestCase{
 
         Node vertex;
         Node justVisited = null;
+        Node justCleared = null;
 
         while(!myStack.isEmpty()){
             vertex = myStack.peek();
@@ -134,6 +135,7 @@ class TestCase{
                 count++;
 
                 Node popped = myStack.pop();
+                justVisited = popped;
 
                 vertex = myStack.peek();
                 System.out.println("Current Vertex = " + vertex);
@@ -143,42 +145,79 @@ class TestCase{
                 System.out.println("__________________________");
             }
 
-            //FIXMe
+            //FIXMe when popped clear the connections (SOLVED)
+            //FIXMe when another neightbor is found, clear the connections of other neighbors
+
 
             if(!marked[i][j]){
                 marked[i][j] = true;
                 //System.out.println(vertex);
-                Node bottom = checkBottom(myStack, i, j);
+
+
+                Node bottom = checkBottom(myStack, i, j, justCleared);
                 if(bottom != null){
                     vertex.neighborsVisited.add(bottom);
+//                    if(justVisited != null && justVisited.row != bottom.row && justVisited.col != bottom.col){
+//                        //clear just visited
+//                        marked[justVisited.row][justVisited.col] = false;
+//                        System.out.println("VISITED CLEAR");
+//                        System.out.println("J.v = " + justVisited);
+//                        justCleared = justVisited;
+//                    }
+
                     continue;
                 }
 
-                Node right = checkRight(myStack, i, j);
+                //FIXME clear visited but dont go in it
+
+                Node right = checkRight(myStack, i, j, justCleared);
                 if(right != null){
                     vertex.neighborsVisited.add(right);
+//                    if(justVisited != null && justVisited.row != right.row && justVisited.col != right.col){
+//                        //clear just visited
+//                        marked[justVisited.row][justVisited.col] = false;
+//                        System.out.println("VISITED CLEAR");
+//                        System.out.println("J.v = " + justVisited);
+//                        justCleared = justVisited;
+//                    }
                     continue;
                 }
 
-                Node top = checkTop(myStack, i, j);
+                Node top = checkTop(myStack, i, j, justCleared);
                 if(top != null){
                     vertex.neighborsVisited.add(top);
+//                    if(justVisited != null && justVisited.row != top.row && justVisited.col != top.col){
+//                        //clear just visited
+//                        marked[justVisited.row][justVisited.col] = false;
+//                        System.out.println("VISITED CLEAR");
+//                        System.out.println("J.v = " + justVisited);
+//                        justCleared = justVisited;
+//                    }
                     continue;
                 }
 
-                Node left = checkLeft(myStack, i, j);
+                Node left = checkLeft(myStack, i, j, justCleared);
                 if(left != null){
                     vertex.neighborsVisited.add(left);
+//                    if(justVisited != null && justVisited.row != left.row && justVisited.col != left.col){
+//                        //clear just visited
+//                        marked[justVisited.row][justVisited.col] = false;
+//                        System.out.println("VISITED CLEAR");
+//                        System.out.println("J.v = " + justVisited);
+//                        justCleared = justVisited;
+//                    }
                     continue;
                 }
 
+                if(vertex.row == 2 && vertex.col == 1){
+                    System.out.println("*************************");
+                }
 
             }
 
             System.out.print("cannot go further = ");
             Node popped = myStack.pop();
             System.out.println("Popped " + popped);
-            //FIXME equals method?
 
             justVisited = popped;
 
@@ -195,14 +234,17 @@ class TestCase{
         return count;
     }
 
+    private void clearNode(Node node){
+        int i = node.row;
+        int j = node.col;
+
+        marked[i][j] = false;
+    }
+
 
     //FIXME once you backtrack, mark others as false but don't traverse it
-
-    //FIXME mark nodes as traversing so there are no loops (done by turning marked into true)
-    //FIXME unmark current cell and backtrack --> look for other paths
-
-
-    //FIXME backtrack but don't visit it
+    //FIXME problem with c0, d0
+    //FIXME error is not wiht left vertex
 
     /*
     public int countPaths(){
@@ -270,9 +312,12 @@ class TestCase{
         }
     }
 
-    private Node checkBottom(Stack<Node> stack, int i, int j){
+    private Node checkBottom(Stack<Node> stack, int i, int j, Node justVisited){
         if((i + 1) < N){
             if((matrix[i + 1][j] == 0) && (!marked[i + 1][j])){
+                if(justVisited != null && justVisited.row == i + 1 && justVisited.col == j){
+                    return null;
+                }
                 Node temp = new Node(i + 1, j);
                 stack.push(temp);
                 return temp;
@@ -281,9 +326,12 @@ class TestCase{
         return null;
     }
 
-    private Node checkRight(Stack<Node> stack, int i, int j){
+    private Node checkRight(Stack<Node> stack, int i, int j, Node justVisited){
         if((j + 1) < N){
             if((matrix[i][j + 1] == 0) && (!marked[i][j + 1])){
+                if(justVisited != null && justVisited.row == i && justVisited.col == j + 1){
+                    return null;
+                }
                 Node temp = new Node(i, j + 1);
                 stack.push(temp);
                 return temp;
@@ -292,9 +340,13 @@ class TestCase{
         return null;
     }
 
-    private Node checkTop(Stack<Node> stack, int i, int j){
+    private Node checkTop(Stack<Node> stack, int i, int j, Node justVisited){
         if((i - 1) >= 0){
             if((matrix[i - 1][j] == 0) && (!marked[i - 1][j])){
+                if(justVisited != null && justVisited.row == i - 1 && justVisited.col == j){
+                    System.out.println("BRUHHHH");
+                    return null;
+                }
                 Node temp = new Node(i - 1, j);
                 stack.push(temp);
                 return temp;
@@ -303,9 +355,12 @@ class TestCase{
         return null;
     }
 
-    private Node checkLeft(Stack<Node> stack, int i, int j){
+    private Node checkLeft(Stack<Node> stack, int i, int j, Node justVisited){
        if((j - 1) >= 0){
            if((matrix[i][j - 1] == 0) && (!marked[i][j - 1])){
+               if(justVisited != null && justVisited.row == i && justVisited.col == j - 1){
+                   return null;
+               }
                 Node temp = new Node(i, j - 1);
                 stack.push(temp);
                 return temp;
