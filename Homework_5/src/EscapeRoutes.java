@@ -137,7 +137,7 @@ class PrisonCase {
                 count++;
                 myStack.pop();
                 //System.out.println("------------------------------------------------");
-                System.out.println(myStack);
+                System.out.println(myStack + " " + end);
                 continue;
             }
             if(!marked[i][j]){ //check if marked
