@@ -23,14 +23,12 @@ public class EscapeRoutes {
 
                 PrisonCase case1 = new PrisonCase(N, matrix);
 
-                //FIXMe Delete Later
-                System.out.println(N);
+                //System.out.println(N);
 
-                case1.printMatrix();
+                //case1.printMatrix();
 
                 System.out.println(case1.getNumEscapePaths());
-                //System.out.println(case1.countPaths());
-                System.out.println("-------------------------------------");
+                //System.out.println("-------------------------------------");
             }
 
         }catch(FileNotFoundException e){
@@ -123,15 +121,15 @@ class PrisonCase {
             int j = vertex.col;
 
 
-            System.out.println("Current vertex = " + vertex + " JustVisited = " + justVisited);
+            //System.out.println("Current vertex = " + vertex + " JustVisited = " + justVisited);
             if (justVisited != null) {
                 for (int index = 0; index < justVisited.forbidden.size(); index++) {
                     Node temp = justVisited.forbidden.get(index);
                     clearVertex(temp.row, temp.col);
                 }
             }
-            System.out.println("Forbidden = " + vertex.forbidden);
-            System.out.println("Stack = " + myStack);
+            //System.out.println("Forbidden = " + vertex.forbidden);
+            //System.out.println("Stack = " + myStack);
 
             if (vertex.equals(end)) {
                 count++;
@@ -140,9 +138,10 @@ class PrisonCase {
                 clearVertex(peeked.row, peeked.col);
                 peeked.forbidden.add(justVisited);
 
-                System.out.println("------------------------------------------------");
+                //System.out.println("------------------------------------------------");
 
-                //System.out.println(myStack + " " + end);
+
+                // System.out.println(myStack + " " + end); //Uncomment to see the paths themselves
 
 
                 continue;
@@ -150,7 +149,6 @@ class PrisonCase {
 
             if(!marked[i][j]) { //check if marked
                     marked[i][j] = true;
-                    //FIXME c1 did not enter this
 
                     //check bottom
                     if (i + 1 < N) {
@@ -213,7 +211,7 @@ class PrisonCase {
                     }
 
                 }
-                System.out.println("Cannot proceed -- backtracking...");
+                //System.out.println("Cannot proceed -- backtracking...");
 
                 Node popped = myStack.pop();
                 justVisited = popped;
