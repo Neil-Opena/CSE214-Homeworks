@@ -117,15 +117,15 @@ class PrisonCase {
 
         Node vertex;
         Node justVisited = null;
-        while(!myStack.isEmpty()){
+        while(!myStack.isEmpty()) {
             vertex = myStack.peek();
             int i = vertex.row;
             int j = vertex.col;
 
 
             System.out.println("Current vertex = " + vertex + " JustVisited = " + justVisited);
-            if(justVisited != null){
-                for(int index = 0; index < justVisited.forbidden.size(); index++){
+            if (justVisited != null) {
+                for (int index = 0; index < justVisited.forbidden.size(); index++) {
                     Node temp = justVisited.forbidden.get(index);
                     clearVertex(temp.row, temp.col);
                 }
@@ -133,90 +133,98 @@ class PrisonCase {
             System.out.println("Forbidden = " + vertex.forbidden);
             System.out.println("Stack = " + myStack);
 
-            if(vertex.equals(end)){
+            if (vertex.equals(end)) {
                 count++;
-                myStack.pop();
-                System.out.println("------------------------------------------------");
-                //System.out.println(myStack + " " + end);
-                continue;
-            }
-            if(!marked[i][j]){ //check if marked
-                marked[i][j] = true;
-
-                //check bottom
-                if(i + 1 < N){
-                    //check if marked
-                    if(!marked[i + 1][j] && matrix[i + 1][j] == 0){
-                        justVisited = vertex;
-                        Node temp = new Node(i + 1, j);
-
-                        //check if temp is in forbidden list
-                        if(!vertex.forbidden.contains(temp)){
-                            myStack.push(temp);
-                            continue;
-                        }
-                    }
-                }
-
-                //check right
-                if(j + 1 < N){
-                    //check if marked
-                    if(!marked[i][j + 1] && matrix[i][j + 1] == 0){
-                        justVisited = vertex;
-                        Node temp = new Node(i, j + 1);
-
-                        //check if temp is in forbidden list
-                        if(!vertex.forbidden.contains(temp)){
-                            myStack.push(temp);
-                            continue;
-                        }
-                    }
-                }
-
-                //check top
-                if(i - 1 >= 0){
-                    //check if marked
-                    if(!marked[i - 1][j] && matrix[i - 1][j] == 0){
-                        justVisited = vertex;
-                        Node temp = new Node(i - 1, j);
-
-                        //check if temp is in forbidden list
-                        if(!vertex.forbidden.contains(temp)){
-                            myStack.push(temp);
-                            continue;
-                        }
-                    }
-                }
-
-                //check left
-                if(j - 1 >= 0){
-                    //check if marked
-                    if(!marked[i][j - 1] && matrix[i][j - 1] == 0){
-                        justVisited = vertex;
-                        Node temp = new Node(i, j - 1);
-
-                        //check if temp is in forbidden list
-                        if(!vertex.forbidden.contains(temp)){
-                            myStack.push(temp);
-                            continue;
-                        }
-                    }
-                }
-
-            }
-            System.out.println("Cannot proceed -- backtracking...");
-
-            Node popped = myStack.pop();
-            justVisited = popped;
-
-            //marks peek as false so that it can enter if statement and check again
-            if(!vertex.equals(start)){
+                justVisited = myStack.pop();
                 Node peeked = myStack.peek();
                 clearVertex(peeked.row, peeked.col);
-                peeked.forbidden.add(popped);
-            }
-        }
+                peeked.forbidden.add(justVisited);
 
+                System.out.println("------------------------------------------------");
+
+                //System.out.println(myStack + " " + end);
+
+
+                continue;
+            }
+
+            if(!marked[i][j]) { //check if marked
+                    marked[i][j] = true;
+                    //FIXME c1 did not enter this
+
+                    //check bottom
+                    if (i + 1 < N) {
+                        //check if marked
+                        if (!marked[i + 1][j] && matrix[i + 1][j] == 0) {
+                            justVisited = vertex;
+                            Node temp = new Node(i + 1, j);
+
+                            //check if temp is in forbidden list
+                            if (!vertex.forbidden.contains(temp)) {
+                                myStack.push(temp);
+                                continue;
+                            }
+                        }
+                    }
+
+                    //check right
+                    if (j + 1 < N) {
+                        //check if marked
+                        if (!marked[i][j + 1] && matrix[i][j + 1] == 0) {
+                            justVisited = vertex;
+                            Node temp = new Node(i, j + 1);
+
+                            //check if temp is in forbidden list
+                            if (!vertex.forbidden.contains(temp)) {
+                                myStack.push(temp);
+                                continue;
+                            }
+                        }
+                    }
+
+                    //check top
+                    if (i - 1 >= 0) {
+                        //check if marked
+                        if (!marked[i - 1][j] && matrix[i - 1][j] == 0) {
+                            justVisited = vertex;
+                            Node temp = new Node(i - 1, j);
+
+                            //check if temp is in forbidden list
+                            if (!vertex.forbidden.contains(temp)) {
+                                myStack.push(temp);
+                                continue;
+                            }
+                        }
+                    }
+
+                    //check left
+                    if (j - 1 >= 0) {
+                        //check if marked
+                        if (!marked[i][j - 1] && matrix[i][j - 1] == 0) {
+                            justVisited = vertex;
+                            Node temp = new Node(i, j - 1);
+
+                            //check if temp is in forbidden list
+                            if (!vertex.forbidden.contains(temp)) {
+                                myStack.push(temp);
+                                continue;
+                            }
+                        }
+                    }
+
+                }
+                System.out.println("Cannot proceed -- backtracking...");
+
+                Node popped = myStack.pop();
+                justVisited = popped;
+
+                //marks peek as false so that it can enter if statement and check again
+                if (!vertex.equals(start)) {
+                    Node peeked = myStack.peek();
+                    clearVertex(peeked.row, peeked.col);
+                    peeked.forbidden.add(popped);
+                }
+            }
 
         return count;
     }
