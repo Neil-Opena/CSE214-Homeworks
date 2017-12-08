@@ -58,8 +58,16 @@ class PrisonCase {
         }
 
         public String toString() {
-
             return ("[" + (char) ('a' + row) + "," + col + "] ");
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof Node){
+                Node test = (Node) obj;
+                return test.row == row && test.col == col;
+            }
+            return false;
         }
     }
 
@@ -108,6 +116,71 @@ class PrisonCase {
         myStack.push(start); //push starting cell
 
         Node vertex;
+        while(!myStack.isEmpty()){
+            vertex = myStack.peek();
+            int i = vertex.row;
+            int j = vertex.col;
+
+
+            System.out.println("Current vertex = " + vertex);
+            System.out.println("Stack = " + myStack.toString());
+
+            if(vertex.equals(end)){
+                count++;
+                myStack.pop();
+                continue;
+            }
+            if(!marked[i][j]){ //check if marked
+                marked[i][j] = true;
+
+                //check bottom
+                if(i + 1 < N){
+                    //check if marked
+                    if(!marked[i + 1][j] && matrix[i + 1][j] == 0){
+                        myStack.push(new Node(i + 1, j ));
+                        continue;
+                    }
+                }
+
+                //check right
+                if(j + 1 < N){
+                    //check if marked
+                    if(!marked[i][j + 1] && matrix[i][j + 1] == 0){
+                        myStack.push(new Node(i, j + 1));
+                        continue;
+                    }
+                }
+
+                //check top
+                if(i - 1 >= 0){
+                    //check if marked
+                    if(!marked[i - 1][j] && matrix[i - 1][j] == 0){
+                        myStack.push(new Node(i - 1, j));
+                        continue;
+                    }
+                }
+
+                //check left
+                if(j - 1 >= 0){
+                    //check if marked
+                    if(!marked[i][j - 1] && matrix[i][j - 1] == 0){
+                        myStack.push(new Node(i, j - 1));
+                        continue;
+                    }
+                }
+
+            }
+            System.out.println("Cannot proceed -- backtracking...");
+
+            Node popped = myStack.pop();
+            //marked[popped.row][popped.col] = false;
+
+            //marks peek as false so that it can enter if statement and check again
+            if(!vertex.equals(start)){
+                Node peeked = myStack.peek();
+                marked[peeked.row][peeked.col] = false;
+            }
+        }
 
 
         return count;
