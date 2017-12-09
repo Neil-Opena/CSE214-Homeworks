@@ -28,7 +28,6 @@ public class ShortestPath {
                 System.out.println(N);
                 System.out.println(source + " " + destination);
                 case1.printMatrix();
-                case1.printDistances();
                 case1.printShortestPath();
                 System.out.println("-------------------------------------");
             }
@@ -39,108 +38,147 @@ public class ShortestPath {
     }
 }
 
-class TestCase{
+class TestCase {
     private int N;
     private int source;
     private int destination;
     private int[][] matrix;
-    private ArrayList<Integer> visited;
-    private ArrayList<Integer> vertices;
-    private int[] distances;
+    private ArrayList<Node> visited;
+    private ArrayList<Node> remaining;
+    private Node[] vertices;
 
-    public TestCase(int N, int source, int destination, String[][] matrix){
+    private class Node {
+        private int index;
+        private int distance;
+        private Node parent;
+
+        public Node(int index) {
+            this.index = index;
+        }
+
+        public String toString() {
+            return "{" + index + "}";
+        }
+    }
+
+    public TestCase(int N, int source, int destination, String[][] matrix) {
         this.N = N;
         this.source = source;
         this.destination = destination;
 
-        this.vertices = new ArrayList<Integer>();
-        for(int i = 0; i < N; i++){
-            vertices.add(i);
+        this.remaining = new ArrayList<Node>();
+        this.vertices = new Node[N];
+        for (int i = 0; i < N; i++) {
+            Node temp = new Node(i);
+            remaining.add(temp);
+            vertices[i] = temp;
         }
 
-        this.visited = new ArrayList<Integer>();
+        this.visited = new ArrayList<Node>();
 
         this.matrix = new int[N][N];
-        for(int i = 0; i < N; i++){
-            for(int j = 0; j < N; j++){
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 this.matrix[i][j] = Integer.parseInt(matrix[i][j]);
             }
         }
 
         int infinity = 101; //0 <= w <= 100
-        this.distances = new int[N];
-        for(int i = 0; i < N; i++){
-            this.distances[i] = infinity;
+        for (int i = 0; i < remaining.size(); i++) {
+            remaining.get(i).distance = infinity;
         }
 
-        distances[source] = 0;
+        remaining.get(source).distance = 0;
+
     }
 
-    public void printMatrix(){
-        for(int[] row : matrix){
-            for(int col : row){
+    public void printMatrix() {
+        for (int[] row : matrix) {
+            for (int col : row) {
                 System.out.print(col + " ");
             }
             System.out.println();
         }
     }
 
-    public void printShortestPath(){
+    public void printShortestPath() {
         //Dijkstra's Shortest Path Algorithm
 
-        for(int i = 0; i < N - 1; i++){
-            int next = findMin(vertices);
+        for (int i = 0; i < N - 1; i++) {
+            Node next = findMinNode();
             visited.add(next); //S Union next
-            vertices.remove((Object) next);
-            //System.out.println("Next = " + next);
-            //System.out.println("V = " + visited);
-            //System.out.println("V - S = " + vertices);
-            //System.out.print("Neighbors of " + next + " ===== ");
-            for(int j = 0; j < vertices.size(); j++){ //for each vertex v in V - S that is neighbor of next
-                if(matrix[next][vertices.get(j)] != 0){ // check if it is a neighbor
-                    //System.out.print(vertices.get(j) + " ");
-                    int index = vertices.get(j);
-                    int weight = matrix[next][vertices.get(j)];
-                    if(distances[next] + weight < distances[index]){
-                        distances[index] = distances[next] + weight;
+            remaining.remove(next);
+
+            /*
+            System.out.println("Next = " + next);
+            System.out.println("V = " + visited);
+            System.out.println("V - S = " + remaining);
+            */
+
+            for (int j = 0; j < remaining.size(); j++) { //for each vertex v in V - S that is neighbor of next
+
+                if (matrix[next.index][remaining.get(j).index] != 0) { // check if it is a neighbor
+
+                    Node test = remaining.get(j);
+                    int weight = matrix[next.index][test.index];
+                    if(next.distance + weight < test.distance){
+                        test.distance = next.distance + weight;
                     }
                 }
+
             }
-            System.out.println();
-            printDistances();
-            System.out.println("-----------------");
+            //printDistances();
         }
+        printDistances();
     }
 
-    private int findMin(ArrayList<Integer> list){
-        int min = distances[list.get(0)];
-        int minIndex = list.get(0);
-        for(int i = 0; i < list.size(); i++){
-            int val = distances[list.get(i)];
-            if(val < min){
-                min = distances[list.get(i)];
-                minIndex = list.get(i);
+
+    private Node findMinNode(){
+        Node minNode = remaining.get(0);
+        for(int i = 0; i < remaining.size(); i++){ //traverse V - S
+            if(remaining.get(i).distance < minNode.distance){
+                minNode = remaining.get(i);
             }
         }
-        return minIndex;
+        return minNode;
     }
 
-    private int findMinIndex(int[] arr){
-        int min = arr[0];
-        int minIndex = 0;
-        for(int i = 0; i < arr.length; i++){
-            if(arr[i] < min){
-                min = arr[i];
-                minIndex = i;
-            }
-        }
-        return minIndex;
-    }
+//    private Node findMinNode(ArrayList<Node> list){
+//        int min = distances[list.get(0).index];
+//        int minIndex = list.get(0).index;
+//        for(int i = 0; i < list.size(); i++){ //traverse V - S
+//            int val = distances[list.get(i).index];
+//            if(val < min){
+//                min = distances[list.get(i).index];
+//                minIndex = list.get(i).index;
+//            }
+//        }
+//
+//        //min = distances[minIndex]
+//        System.out.println("ACTUAL minValue = " + min + " minIndex = " + minIndex);
+//        return list.get(minIndex);
+//
+//
+//    }
+
+//    private int findMin(ArrayList<Integer> list){
+//        int min = distances[list.get(0)];
+//        int minIndex = list.get(0);
+//        for(int i = 0; i < list.size(); i++){
+//            int val = distances[list.get(i)];
+//            if(val < min){
+//                min = distances[list.get(i)];
+//                minIndex = list.get(i);
+//            }
+//        }
+//        return minIndex;
+//    }
+
 
     public void printDistances(){
         System.out.print("Distances = [");
         for(int i = 0; i < N; i++){
-            System.out.print(distances[i] + ", ");
+            System.out.print(vertices[i].distance + ", ");
         }
         System.out.println("]");
     }
