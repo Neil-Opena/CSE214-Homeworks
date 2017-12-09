@@ -86,7 +86,7 @@ class TestCase {
             }
         }
 
-        int infinity = 101; //0 <= w <= 100
+        int infinity = 99999;
         for (int i = 0; i < remaining.size(); i++) {
             remaining.get(i).distance = infinity;
         }
@@ -138,21 +138,29 @@ class TestCase {
         //printDistances();
     }
 
-    public int getDistance(){
-        return vertices[destination].distance;
+    public String getDistance(){
+        int val = vertices[destination].distance;
+        if(val < 99999){
+            return val + " ";
+        }
+        return "No path possible";
     }
 
     public void printPath(){
-        Node temp = vertices[destination];
-        Stack<Integer> stack = new Stack<>();
-        while(temp!=null){
-            stack.push(temp.index);
-            temp = temp.parent;
+        if(vertices[destination].distance < 99999){
+            Node temp = vertices[destination];
+            Stack<Integer> stack = new Stack<>();
+            while(temp!=null){
+                stack.push(temp.index);
+                temp = temp.parent;
+            }
+            while(stack.size() > 1){
+                System.out.print(stack.pop() + " -> ");
+            }
+            System.out.println(stack.pop());
+        }else{
+            System.out.println("No path possible");
         }
-        while(stack.size() > 1){
-            System.out.print(stack.pop() + " -> ");
-        }
-        System.out.println(stack.pop());
 
     }
 
