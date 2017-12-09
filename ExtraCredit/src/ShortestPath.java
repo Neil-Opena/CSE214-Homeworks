@@ -28,6 +28,9 @@ public class ShortestPath {
                 System.out.println(N);
                 System.out.println(source + " " + destination);
                 case1.printMatrix();
+                case1.printDistances();
+                case1.printShortestPath();
+                System.out.println("-------------------------------------");
             }
 
         }catch(FileNotFoundException e){
@@ -41,11 +44,21 @@ class TestCase{
     private int source;
     private int destination;
     private int[][] matrix;
+    private ArrayList<Integer> visited;
+    private ArrayList<Integer> vertices;
+    private int[] distances;
 
     public TestCase(int N, int source, int destination, String[][] matrix){
         this.N = N;
         this.source = source;
         this.destination = destination;
+
+        this.vertices = new ArrayList<Integer>();
+        for(int i = 0; i < N; i++){
+            vertices.add(i);
+        }
+
+        this.visited = new ArrayList<Integer>();
 
         this.matrix = new int[N][N];
         for(int i = 0; i < N; i++){
@@ -53,6 +66,14 @@ class TestCase{
                 this.matrix[i][j] = Integer.parseInt(matrix[i][j]);
             }
         }
+
+        int infinity = 101; //0 <= w <= 100
+        this.distances = new int[N];
+        for(int i = 0; i < N; i++){
+            this.distances[i] = infinity;
+        }
+
+        distances[source] = 0;
     }
 
     public void printMatrix(){
@@ -65,7 +86,63 @@ class TestCase{
     }
 
     public void printShortestPath(){
+        //Dijkstra's Shortest Path Algorithm
 
+        for(int i = 0; i < N - 1; i++){
+            int next = findMin(vertices);
+            visited.add(next); //S Union next
+            vertices.remove((Object) next);
+            //System.out.println("Next = " + next);
+            //System.out.println("V = " + visited);
+            //System.out.println("V - S = " + vertices);
+            //System.out.print("Neighbors of " + next + " ===== ");
+            for(int j = 0; j < vertices.size(); j++){ //for each vertex v in V - S that is neighbor of next
+                if(matrix[next][vertices.get(j)] != 0){ // check if it is a neighbor
+                    //System.out.print(vertices.get(j) + " ");
+                    int index = vertices.get(j);
+                    int weight = matrix[next][vertices.get(j)];
+                    if(distances[next] + weight < distances[index]){
+                        distances[index] = distances[next] + weight;
+                    }
+                }
+            }
+            System.out.println();
+            printDistances();
+            System.out.println("-----------------");
+        }
+    }
+
+    private int findMin(ArrayList<Integer> list){
+        int min = distances[list.get(0)];
+        int minIndex = list.get(0);
+        for(int i = 0; i < list.size(); i++){
+            int val = distances[list.get(i)];
+            if(val < min){
+                min = distances[list.get(i)];
+                minIndex = list.get(i);
+            }
+        }
+        return minIndex;
+    }
+
+    private int findMinIndex(int[] arr){
+        int min = arr[0];
+        int minIndex = 0;
+        for(int i = 0; i < arr.length; i++){
+            if(arr[i] < min){
+                min = arr[i];
+                minIndex = i;
+            }
+        }
+        return minIndex;
+    }
+
+    public void printDistances(){
+        System.out.print("Distances = [");
+        for(int i = 0; i < N; i++){
+            System.out.print(distances[i] + ", ");
+        }
+        System.out.println("]");
     }
 
 }
