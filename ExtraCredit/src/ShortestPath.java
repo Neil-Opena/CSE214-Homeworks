@@ -8,8 +8,7 @@ public class ShortestPath {
 
             int T = Integer.parseInt(input.nextLine());
 
-            //FIXME delete later
-            System.out.println(T);
+            //System.out.println(T);
             for(int caseI = 0; caseI < T; caseI++){
                 int N = Integer.parseInt(input.nextLine());
 
@@ -24,12 +23,15 @@ public class ShortestPath {
 
                 TestCase case1 = new TestCase(N, source, destination, matrix);
 
-                //FIXME delete later
-                System.out.println(N);
-                System.out.println(source + " " + destination);
-                case1.printMatrix();
-                case1.printShortestPath();
-                System.out.println("-------------------------------------");
+                //System.out.println(N);
+                //System.out.println(source + " " + destination);
+                //case1.printMatrix();
+
+                case1.shortPathAlgorithm();
+                System.out.println(case1.getDistance());
+                case1.printPath();
+
+                //System.out.println("-------------------------------------");
             }
 
         }catch(FileNotFoundException e){
@@ -73,6 +75,7 @@ class TestCase {
             remaining.add(temp);
             vertices[i] = temp;
         }
+        vertices[source].parent = null;
 
         this.visited = new ArrayList<Node>();
 
@@ -101,7 +104,7 @@ class TestCase {
         }
     }
 
-    public void printShortestPath() {
+    public void shortPathAlgorithm() {
         //Dijkstra's Shortest Path Algorithm
 
         for (int i = 0; i < N - 1; i++) {
@@ -123,15 +126,35 @@ class TestCase {
                     int weight = matrix[next.index][test.index];
                     if(next.distance + weight < test.distance){
                         test.distance = next.distance + weight;
+                        test.parent = next;
+                        //System.out.println("Parent of " + test + " is " + next);
                     }
                 }
 
             }
             //printDistances();
+            //System.out.println("---------------");
         }
-        printDistances();
+        //printDistances();
     }
 
+    public int getDistance(){
+        return vertices[destination].distance;
+    }
+
+    public void printPath(){
+        Node temp = vertices[destination];
+        Stack<Integer> stack = new Stack<>();
+        while(temp!=null){
+            stack.push(temp.index);
+            temp = temp.parent;
+        }
+        while(stack.size() > 1){
+            System.out.print(stack.pop() + " -> ");
+        }
+        System.out.println(stack.pop());
+
+    }
 
     private Node findMinNode(){
         Node minNode = remaining.get(0);
@@ -143,39 +166,7 @@ class TestCase {
         return minNode;
     }
 
-//    private Node findMinNode(ArrayList<Node> list){
-//        int min = distances[list.get(0).index];
-//        int minIndex = list.get(0).index;
-//        for(int i = 0; i < list.size(); i++){ //traverse V - S
-//            int val = distances[list.get(i).index];
-//            if(val < min){
-//                min = distances[list.get(i).index];
-//                minIndex = list.get(i).index;
-//            }
-//        }
-//
-//        //min = distances[minIndex]
-//        System.out.println("ACTUAL minValue = " + min + " minIndex = " + minIndex);
-//        return list.get(minIndex);
-//
-//
-//    }
-
-//    private int findMin(ArrayList<Integer> list){
-//        int min = distances[list.get(0)];
-//        int minIndex = list.get(0);
-//        for(int i = 0; i < list.size(); i++){
-//            int val = distances[list.get(i)];
-//            if(val < min){
-//                min = distances[list.get(i)];
-//                minIndex = list.get(i);
-//            }
-//        }
-//        return minIndex;
-//    }
-
-
-    public void printDistances(){
+    private void printDistances(){
         System.out.print("Distances = [");
         for(int i = 0; i < N; i++){
             System.out.print(vertices[i].distance + ", ");
